@@ -1,0 +1,105 @@
+{% comment -%}
+    Critical styles for most common elements when uses Elements Design
+{% endcomment -%}
+{% style %}
+    .page-scroll-up,
+    .product-form__buttons button,
+    header .cart-sidebar__footer-actions > * {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem{% else %}3px{% endif %};
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem{% else %}3px{% endif %};
+    }
+
+    .swatch-attribute-options input[type=radio] + label,
+    .swatch-option[type=radio]:checked + label:before,
+    .swatch-option[type=radio] + label:hover:before,
+    variant-radios .form__label ~ label,
+    variant-radios[data-mark-unavailable-variant=true] input[type=radio].unavailable-option + label .unavailable-swatch__overlay {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.swatches_border_radius_value }}rem{% else %}4px{% endif %};
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.swatches_border_radius_value }}rem{% else %}4px{% endif %};
+    }
+
+    [type=text],
+    [type=password],
+    [type=url],
+    [type=tel],
+    [type=search],
+    .search__input,
+    [type=datetime],
+    [type=email],
+    [type=date],
+    textarea,
+    form select,
+    .select__select,
+    .header__search .field,
+    .pagination__item,
+    .our-collections.slider li > a .item-title,
+    .facet-checkbox:not(.facet-checkbox--disabled) .facet__swatch-option[type=radio] + label::before,
+    .facet__swatch-option + label,
+    .compare-icon > svg,
+    .compare-checkmark > svg,
+    .grid-item .compare-add-button,
+    .jdgm-write-rev-link.jdgm-write-rev-link,
+    .product-tabs .spr-summary-actions-newreview,
+    .menu-drawer .localization-form__select,
+    bought-together .item-checkbox svg {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem {% else %}2px{% endif %};
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem {% else %}2px{% endif %};
+    }
+
+    [type=button],
+    [type=reset],
+    [type=submit],
+    button,
+    .button,
+    .shopify-payment-button__button [role=button],
+    .shopify-challenge__button {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}{% else %}.25{% endif %}rem;
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}{% else %}.25{% endif %}rem;
+    }
+
+    .cart__dynamic-checkout-buttons div[role=button] {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}{% else %}.25{% endif %}rem !important;
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}{% else %}.25{% endif %}rem !important;
+      height: 44px !important;
+    }
+
+    .header__search .search__button {
+      border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem{% else %}0px 2px 2px 0px{% endif %};
+      -webkit-border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}rem{% else %}0px 2px 2px 0px{% endif %};
+    }
+
+    .header__search .search__button {
+      padding: {% if settings.use_elements_border_radius %}0.4{% else %}.75{% endif %}rem;
+    }
+
+    footer .newsletter-form__field-wrapper button.button,
+    .footer-contacts__newsletter button.button {
+      padding: {% if settings.use_elements_border_radius %}0.35{% else %}.5{% endif %}rem;
+    }
+
+    footer .newsletter-form__field-wrapper button.button,
+    .footer-contacts__newsletter button.button,
+    .field__button {
+      position: absolute;{% if settings.use_elements_border_radius %}
+      top: .25rem;
+      bottom: .25rem;
+      right: .25rem;{% else %}
+      top: 0;
+      bottom: 0;
+      right: 0;{% endif %}
+    }
+
+    [type=email],
+    [type=password],
+    [type=text],
+    .popup-banner__text .newsletter-form__button {
+      width: {% if settings.use_elements_border_radius %}100%{% else %}calc(100% - 1rem){% endif %}!important;
+    }
+
+    {% if settings.check_theme_style == 'light' %}
+    .header .highlite_parent_item_on_active_child,
+    .top__menu-item-active,
+    .header .header__menu-item-1-highlighted {
+        border-radius: {% if settings.use_elements_border_radius %}{{ settings.button_border_radius_value }}{% else %}.25{% endif %}rem;
+    }{% endif %}
+{% endstyle %}

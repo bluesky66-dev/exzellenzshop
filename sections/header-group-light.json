@@ -1,0 +1,46 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_bar": {
+          "type": "announcement",
+          "disabled": true,
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "announcement_bar"
+      ],
+      "settings": {
+      }
+    },
+    "header_top": {
+      "type": "header-top",
+      "settings": {
+        "full_width": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify:\/\/shop_images\/corp.png",
+        "logo_width": 220
+      }
+    },
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header_top",
+    "header",
+    "breadcrumbs"
+  ]
+}

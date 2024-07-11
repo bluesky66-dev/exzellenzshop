@@ -1,0 +1,78 @@
+{%- unless product.has_only_default_variant -%}
+    {% liquid
+        assign optionValues = product.options_with_values
+        assign isColorOption = ''
+        for opt in optionValues
+            if opt.name == 'Color' or opt.name == 'Colour'
+                assign isColorOption = 'color--options'
+            endif
+        endfor
+    %}
+    {% unless isColorOption == blank %}
+        <select-color-variants
+            class="no-js-hidden {{ isColorOption }}"
+            data-section="{{ section.id }}"
+            data-url="{{ product.url }}"
+            {{ block.shopify_attributes }}
+        >
+            {%- liquid
+                assign possibleOptionNames = 'color,colour'
+                assign uniqVariantsSrcs = ''
+                for variant in product.variants
+                    assign jsonSrc = variant.featured_image.src | json
+                    assign uniqVariantsSrcs = uniqVariantsSrcs | append: jsonSrc | append: '|'
+                endfor
+                assign uniqVariantsSrcs = uniqVariantsSrcs | split: '|' | uniq | join: ', '
+                assign uniqVariantsSrcs = uniqVariantsSrcs | split: ', '
+            -%}
+            {%- for option in product.options_with_values -%}
+                {%- assign optionName = option.name | downcase -%}
+                {%- if possibleOptionNames contains optionName -%}
+                    <div class="swatch-attribute-options">
+                        {%- for value in option.values -%}
+                            {%- liquid
+                                # assign variantSrc = product.variants[forloop.index0].featured_media.preview_image.src | json | replace: '"', ''
+                                assign variantSrc = uniqVariantsSrcs[forloop.index0] | replace: '"', ''
+                                assign limitValue = 3
+                                assign limitSwatchesToShow = forloop.length | minus: limitValue
+                                assign swatchValue = value | downcase | remove: ' ' | remove: '.' | remove: ',' | escape
+                            -%}
+
+                            {% capture background_color %}
+                {% render 'color-swatches-background' color_value: value %}
+            {% endcapture %}
+
+                            <input
+                                type="radio"
+                                id="{{ section.id }}-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                class="swatch-option {{ optionName }} visually-hidden"
+                                name="{{ option.name }}"
+                                value="{{ swatchValue }}"
+                                aria-label="{{ swatchValue }}"
+                            >
+                            <label
+                                for="{{ section.id }}-{{ product.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                data-color="{{ swatchValue }}"
+                                data-product-id="{{ product.id }}"
+                                data-variant-src="{{ variantSrc | default: 'null' }}"
+                                data-section-id="{{ section.id }}"
+                                {%- if background_color != blank %}
+                                    style="{{ background_color | strip }}"
+                                {% endif -%}
+                                title="{{ swatchValue }}"
+                                {%- if settings.product_card_hover_effect and forloop.index > limitValue %}
+                                    class="swatch-label__hidden"
+                                {% endif -%}
+                            ></label>
+                        {%- endfor -%}
+                        {%- if settings.product_card_hover_effect and option.values.size > limitValue -%}
+                            <span class="swatch-option_more">
+                                {{ 'products.product.swatch_option_more' | t: qty: limitSwatchesToShow }}
+                            </span>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+            {%- endfor -%}
+        </select-color-variants>
+    {%- endunless -%}
+{%- endunless -%}

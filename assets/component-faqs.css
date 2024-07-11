@@ -1,0 +1,42 @@
+faqs-accordion .faq-title {
+    cursor: pointer;
+    font-weight: 700;
+    padding: .5rem 2rem;
+    margin-bottom: 0px;
+    text-transform: capitalize;
+}
+
+faqs-accordion .faq-title::before {
+    color: var(--color-base-accent-1);
+    content: '+';
+    display: inline-block;
+    margin: 0 .5rem 0 -2rem;
+    text-align: center;
+    width: 1.5rem;
+}
+
+faqs-accordion .faq-content--inner {
+    padding: .5rem 2rem
+}
+
+.faq-title:empty,
+.faq-content:empty {
+   display: none;
+}
+
+faqs-accordion .faq-title.open::before {
+    content: '−';
+}
+
+.action {
+    padding: .5rem 0rem;
+    margin: 1rem 2rem;
+}
+
+.action .link_to_faq_page {
+    color: var(--color-base-accent-1);
+}
+
+.action .link_to_faq_page:hover {
+    text-decoration: underline;
+}

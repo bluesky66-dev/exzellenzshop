@@ -1,0 +1,143 @@
+{% comment %}
+    Render Banner Image and Collection List in the dropdown content.
+
+    Accepts:
+     - block               {Object}
+     - blockOrder:         {Numb}
+     - parent_item_index:  {Numb}
+{% endcomment %}
+{%- liquid
+    assign useImage = block.settings.enabled
+    assign image = block.settings.item_image
+    assign alignment = block.settings.alignment
+    assign collectionList = block.settings.collections
+    assign imageLink = block.settings.image_link
+    assign imageTitle = block.settings.image_title
+    assign collectionItemsWidth = block.settings.collection_items_width
+    assign viewAll = block.settings.collection_url
+    assign selectedItemIndex = block.settings.item_menu_index
+    assign viewAllAppearance = block.settings.view_all_appearance
+    assign bannerWidth = block.settings.banner_width
+    assign titleBg = 'transparent'
+    assign titleColor = 'var(--color-foreground);'
+-%}
+
+{%- if useImage and parent_item_index == selectedItemIndex -%}
+    {%- # Render Banner image -%}
+    {%- if image != blank or collectionList.count > 0 -%}
+        {%- unless image == blank -%}
+            <div class="col-3 item--with-image" data-block-index="{{ blockOrder }}" style="width: {{ bannerWidth }}%">
+                <div
+                    class="media"
+                    style="padding-bottom: {% if image != blank %}{{ 1 | divided_by: image.aspect_ratio | times: 100 }}{% else %}100{% endif %}%"
+                >
+                    {%- unless imageLink == blank -%}<a href="{{ imageLink }}" class="link_to">{%- endunless -%}
+                    {% render 'render-image', image: image, widths: image.width %}
+                    {%- unless imageLink == blank -%}</a>{%- endunless -%}
+                </div>
+                {%- unless imageTitle == blank -%}
+                    <div class="image--link text-center">{{ imageTitle | escape }}</div>
+                {%- endunless -%}
+            </div>
+        {%- endunless -%}
+
+        {%- # Render Collection List -%}
+        {%- unless collectionList.count == 0 -%}
+            {%- comment -%}
+                Critical styles for Header Dropdown Collection list.
+
+                Accepts:
+                - collectionItemsWidth: {percentage}
+                - alignment:            {String}
+                - viewAll:              {String}
+            {%- endcomment -%}
+            {% style %}
+                @media (min-width: 990px) {
+                  .dropdown-inner__collections {
+                    width: 100%;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                  }
+
+                  .dropdown-inner__collections ul {
+                    width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem .75rem;
+                  }
+
+                  .dropdown-inner__collections .wrapper {
+                    text-align: center;
+                  }
+
+                  .dropdown-inner__collections[data-block-index="{{ blockOrder }}"] li:not(._action) {
+                    width: clamp(100px, {{ collectionItemsWidth | append: '%' }},  300px);
+                    padding: {% if collectionItemsWidth > 40 %}.8{% elsif collectionItemsWidth >= 30 and collectionItemsWidth < 40 %}.6{% elsif collectionItemsWidth <30 and collectionItemsWidth >= 20 %}.4{% else %}.2{% endif %}rem;
+                    border: 1px solid var(--color-foreground-10);
+                    border-radius: .25rem;
+                  }
+
+                  .dropdown-inner__collections[data-block-index="{{ blockOrder }}"] li .item-title {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: .25rem;
+                    font-weight: 500;
+                    font-size: {% if collectionItemsWidth <= 16 %}.75{% elsif collectionItemsWidth > 16 and collectionItemsWidth < 40 %}.875{% else %}1{% endif %}rem;
+                  }
+
+                  .dropdown-inner__collections li:not(._action) > a {
+                    display: block;
+                  }
+
+                  .full-width .container--grid {
+                    align-items: {{ alignment }};
+                  }
+
+                  .dropdown-inner__collections li._action {
+                    display: flex;
+                    width: fit-content;
+                    align-items: center;
+                  }
+
+                  .dropdown-inner__collections .link {
+                    padding: .5rem;
+                  }
+                }
+            {% endstyle %}
+            <div class="dropdown-inner__collections" data-block-index="{{ blockOrder }}">
+                <div class="wrapper">
+                    <ul>
+                        {%- for collectionItem in collectionList -%}
+                            {%- render 'grid-item-collection',
+                                collection: collectionItem,
+                                collection_type: 'slider',
+                                title_color: titleColor,
+                                title_bg_color: titleBg,
+                                item_bg_color: 'transparent'
+                            -%}
+                        {%- endfor -%}
+                        {%- if viewAll != blank -%}
+                            {%- comment -%}
+                                Render Link View All
+                            {%- endcomment -%}
+                            <li class="grid-item _action">
+                                <a
+                                    href="{{ viewAll }}"
+                                    class="view-all animate-arrow{% if viewAllAppearance == 'button' %} button button--primary{% else %} link{% endif %}{% if settings.show_button_ring_on_hover %} border--outline{% endif %}"
+                                    aria-label="{{ 'sections.collection_list.view_all' | t }}"
+                                    title="{{ 'sections.collection_list.view_all' | t }}"
+                                >
+                                    <span>{{ 'sections.collection_list.view_all' | t }}</span>
+                                    {% if viewAllAppearance == 'button' and settings.show_icon_arrow %}
+                                        {% render 'icons-solid', name: 'arrow-right', css_class: 'icon-arrow' %}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                    </ul>
+                </div>
+            </div>
+        {%- endunless -%}
+    {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,31 @@
+.scrolling-text {
+    position: relative;
+    z-index: 9;
+}
+
+.content__wrapper {
+    pointer-events: none;
+}
+
+.content__wrapper p {
+    display: inline-block;
+    animation: scrolling linear infinite;
+}
+
+.content__wrapper span._separator {
+    display: contents;
+}
+
+.content__wrapper span._text {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.scrolling-text:hover .content__wrapper p {
+    animation-play-state: paused;
+}
+
+@keyframes scrolling {
+    0% {transform: translateX(0);}
+    100% {transform: translateX(calc(-100% + 100vw));}
+}

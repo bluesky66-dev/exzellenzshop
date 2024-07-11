@@ -1,0 +1,213 @@
+{% comment %}
+    Render conatcts block for footer.
+
+    Accepts:
+     - block: {Object}
+{% endcomment %}
+{% style %}
+    .footer-contacts {
+        --footer-contacts--background-color: {{ block.settings.color_bg }};
+        --footer-contacts--foreground-color: var(--footer-text-color);
+        --footer-contacts--foreground-color-rgb: {{ block.settings.color_fg.red }}, {{ block.settings.color_fg.green }}, {{ block.settings.color_fg.blue }};
+        --footer-contacts-icon-foreground-color: #CAD4DB;
+    }
+{% endstyle %}
+{% capture socialsHtml %}
+    {% if settings.social_facebook_link != blank %}
+        <a href="{{ settings.social_facebook_link }}" title="{{ 'general.social.titles.facebook' | t }}" aria-label="facebook">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-facebook' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_youtube_link != blank %}
+        <a href="{{ settings.social_youtube_link }}" title="{{ 'general.social.titles.youtube' | t }}" aria-label="youtube">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-youtube' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_twitter_link != blank %}
+        <a href="{{ settings.social_twitter_link }}" title="{{ 'general.social.titles.twitter' | t }}" aria-label="twitter">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-twitter' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_instagram_link != blank %}
+        <a href="{{ settings.social_instagram_link }}" title="{{ 'general.social.titles.instagram' | t }}" aria-label="instagram">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-instagram' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_pinterest_link != blank %}
+        <a href="{{ settings.social_pinterest_link }}" title="{{ 'general.social.titles.pinterest' | t }}" aria-label="pinterest">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-pinterest' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_snapchat_link != blank %}
+        <a href="{{ settings.social_snapchat_link }}" title="{{ 'general.social.titles.snapchat' | t }}" aria-label="snapchat">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-snapchat' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_tumblr_link != blank %}
+        <a href="{{ settings.social_tumblr_link }}" title="{{ 'general.social.titles.tumblr' | t }}" aria-label="tumblr">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-tumblr' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_vimeo_link != blank %}
+        <a href="{{ settings.social_vimeo_link }}" title="{{ 'general.social.titles.vimeo' | t }}" aria-label="vimeo">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-vimeo' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_tiktok_link != blank %}
+        <a href="{{ settings.social_tiktok_link }}" title="{{ 'general.social.titles.tiktok' | t }}" aria-label="tiktok">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-tiktok' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_linkedin_link != blank %}
+        <a href="{{ settings.social_linkedin_link }}" title="{{ 'general.social.titles.linkedin' | t }}" aria-label="linkedin">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-linkedin' %}
+            </i>
+        </a>
+    {% endif %}
+    {% if settings.social_whatsapp_link != blank %}
+        <a href="{{ settings.social_whatsapp_link }}" title="{{ 'general.social.titles.whatsapp' | t }}" aria-label="whatsapp">
+            <i class="icon" aria-hidden="true" focusable="false" role="presentation">
+                {% render 'icons-ion' name: 'logo-whatsapp' %}
+            </i>
+        </a>
+    {% endif %}
+{% endcapture %}
+{% assign socialsHtml = socialsHtml | strip %}
+
+<div
+    class="footer-contacts{% unless block.settings.image_show %} footer-contacts--no-image{% endunless %} gradient"
+    {{ block.shopify_attributes }}
+>
+    <div class="footer-contacts__inner{% if settings.animation_on_reveal %} reveal-slide-in{% endif %} {{ control_section_width }}">
+        {% if block.settings.image_show %}
+            {%- unless settings.check_theme_style == 'light' -%}
+                <span class="h4 footer-contacts__image-title">
+                    {{ 'sections.footer.contacts.title' | t }}
+                </span>
+            {%- endunless -%}
+            <div
+                class="footer-contacts__image footer-contacts__image--{{ block.settings.image_align }} reveal-item"
+                style="max-width: {{ block.settings.image_width }}px"
+            >
+                {% if block.settings.image %}
+                    <div
+                        class="media"
+                        style="padding-bottom: {% render 'helper__media-padding-bottom' image: block.settings.image image_ratio: 'native' %};"
+                    >
+                        {% assign sizes = block.settings.image_width | append: 'px' %}
+                        {% assign imageWidth2x = block.settings.image_width | times: 2 %}
+                        {% assign widths = block.settings.image_width
+                            | append: ','
+                            | append: imageWidth2x
+                            | append: ',#iw#'
+                        %}
+                        {% render 'render-image', image: block.settings.image, sizes: sizes, widths: widths %}
+                    </div>
+                {% else %}
+                    <div class="image-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                            <path d="M258.9 48C141.92 46.42 46.42 141.92 48 258.9c1.56 112.19 92.91 203.54 205.1 205.1 117 1.6 212.48-93.9 210.88-210.88C462.44 140.91 371.09 49.56 258.9 48zm126.42 327.25a4 4 0 01-6.14-.32 124.27 124.27 0 00-32.35-29.59C321.37 329 289.11 320 256 320s-65.37 9-90.83 25.34a124.24 124.24 0 00-32.35 29.58 4 4 0 01-6.14.32A175.32 175.32 0 0180 259c-1.63-97.31 78.22-178.76 175.57-179S432 158.81 432 256a175.32 175.32 0 01-46.68 119.25z"/><path d="M256 144c-19.72 0-37.55 7.39-50.22 20.82s-19 32-17.57 51.93C191.11 256 221.52 288 256 288s64.83-32 67.79-71.24c1.48-19.74-4.8-38.14-17.68-51.82C293.39 151.44 275.59 144 256 144z"/>
+                        </svg>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="footer-contacts__address reveal-item">
+            {% if settings.check_theme_style == 'light' %}
+                <span class="h4 footer-contacts__image-title">
+                    {{ 'sections.footer.contacts.title' | t }}
+                </span>
+            {%- endif %}
+            <div>
+                {% if block.settings.address != blank %}
+                    <div class="address-item address">
+                        <i class="icon">
+                            {% render 'icons-solid', name: 'location-marker' %}
+                        </i>
+                        <div>
+                            <span class="h5">
+                                {{ 'sections.footer.contacts.address' | t }}
+                            </span>
+                            {{ block.settings.address }}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if block.settings.show_email %}
+                    <div class="address-item email">
+                        <i class="icon">
+                            {% render 'icons-solid', name: 'mail' %}
+                        </i>
+                        <div>
+                            <span class="h5">
+                                {{ 'sections.footer.contacts.mail' | t }}
+                            </span>
+                            <a
+                                href="mailto:{{ settings.contact_email }}"
+                                title="{{ 'header_top.contact_email.title' | t }}"
+                            >
+                                {{- settings.contact_email -}}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if block.settings.show_phone %}
+                    <div class="address-item phone">
+                        <i class="icon">
+                            {% render 'icons-solid', name: 'phone' %}
+                        </i>
+                        <div>
+                            <span class="h5">
+                                {{ 'sections.footer.contacts.phone_number' | t }}
+                            </span>
+                            <p>{{ settings.contact_phone }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if socialsHtml != blank %}
+            <div class="footer-contacts__social">
+                <div class="h4">
+                    {{ 'sections.footer.contacts.social_heading' | t }}
+                </div>
+                <div>
+                    {{ socialsHtml }}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if block.settings.show_newsletter %}
+            <div class="footer-contacts__newsletter reveal-item">
+                <div class="h4">
+                    {{ 'newsletter.heading' | t }}
+                </div>
+                <div>
+                    {%- render 'form-newsletter-subscribe',
+                        form_id: 'newsletter-form-footer-contacts',
+                        button_icon: 'caret'
+                    -%}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

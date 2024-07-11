@@ -1,0 +1,129 @@
+{% comment %}
+    Initialization scripts sources to be loaded demands on screen
+
+    Accepts:
+    - init_product_rating_script:       {Bool}
+    - init_squama_script:               {Bool}
+    - init_header_menu_script:          {Bool}
+    - init_slider_script:               {Bool}
+    - init_predictive_search_script:    {Bool}
+    - init_cookie_banner_script:        {Bool}
+    - init_localization_form:           {Bool}
+    - init_product_form:                {Bool}
+    - init_deferred_media:              {Bool}
+    - init_animation_on_reveal:         {Bool}
+{% endcomment %}
+
+{% liquid
+    if init_header_menu_script
+        assign headerMenuSrc = 'header-menu.js' | asset_url
+    endif
+
+    if init_squama_script
+        assign squamaSrc = 'squama-item.js' | asset_url
+    endif
+
+    if init_slider_script
+        assign sliderSrc = 'slider.js' | asset_url
+    endif
+
+    if init_predictive_search_script
+        assign searchSrc = 'predictive-search.js' | asset_url
+    endif
+
+    if init_cookie_banner_script
+        assign cookieBannerSrc = 'cookie-banner.js' | asset_url
+    endif
+
+    if init_localization_form
+        assign localizationFormSrc = 'define-localization-form.js' | asset_url
+    endif
+
+    if init_product_form
+        assign productFormSrc = 'product-form.js' | asset_url
+    endif
+
+    if init_deferred_media
+        assign deferredMediaSrc = 'deferred-media.js' | asset_url
+    endif
+
+    if init_animation_on_reveal
+        assign animationOnReveal = 'scroll-reveal.js' | asset_url
+    endif
+%}
+
+<script type="application/json" id="desktop-only">
+    {
+        "headerMenuSrc"         : "{{ headerMenuSrc | default: 'null' }}"
+    }
+</script>
+<script type="application/json" id="primary--scripts">
+    {
+        "squamaSrc"             : "{{ squamaSrc | default: 'null' }}",
+        "sliderSrc"             : "{{ sliderSrc | default: 'null' }}",
+        "searchSrc"             : "{{ searchSrc | default: 'null' }}",
+        "cookieBannerSrc"       : "{{ cookieBannerSrc | default: 'null' }}",
+        "localizationFormSrc"   : "{{ localizationFormSrc | default: 'null' }}",
+        "productFormSrc"        : "{{ productFormSrc | default: 'null' }}",
+        "deferredMediaSrc"      : "{{ deferredMediaSrc | default: 'null' }}",
+        "animationOnReveal"     : "{{ animationOnReveal | default: 'null' }}"
+    }
+</script>
+
+<script type="text/javascript">
+    const desktopScriptsObject = JSON.parse(document.getElementById("desktop-only").textContent);
+    const primaryScriptsObject = JSON.parse(document.getElementById("primary--scripts").textContent); // all screens demand
+
+    let isDesktopScriptsLoaded = false;
+    let isPrimaryScriptsLoaded = false;
+
+    function loadScript(src) {
+        return new Promise(function(resolve, reject) {
+            const s = document.createElement('script');
+            let isLoaded = false;
+            s.type = 'text/javascript';
+            s.src = src;
+            s.async = true;
+            s.onerror = function(err) {
+                reject(err, s);
+            };
+            s.onload = s.onreadystatechange = function() {
+                if (!isLoaded && (!this.readyState || this.readyState == 'complete')) {
+                    isLoaded = true;
+                    resolve();
+                }
+            };
+
+            const tag = document.getElementsByTagName('script')[0];
+            tag.parentElement.insertBefore(s, tag);
+        })
+    }
+
+    async function initPrimaryScripts() {
+        if (!isPrimaryScriptsLoaded) {
+            for (const p in primaryScriptsObject) {
+                if (primaryScriptsObject[p] !== 'null') await loadScript(primaryScriptsObject[p]);
+            }
+
+            isPrimaryScriptsLoaded = true;
+        }
+    }
+
+    async function init() {
+        initPrimaryScripts();
+
+        let screen = (window.screen.width || this.innerWidth) < 980;
+        if(screen) return;
+
+        if (!isDesktopScriptsLoaded) {
+            for (const s in desktopScriptsObject) {
+                if (desktopScriptsObject[s] !== 'null') await loadScript(desktopScriptsObject[s]);
+            }
+
+            isDesktopScriptsLoaded = true;
+        }
+    }
+
+    init();
+    window.addEventListener('resize', this.init.bind(this));
+</script>

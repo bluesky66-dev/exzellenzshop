@@ -1,0 +1,70 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "footer-contacts": {
+          "type": "footer-contacts",
+          "settings": {
+            "color_bg": "#101824",
+            "color_fg": "#ffffff",
+            "image_show": true,
+            "image": "shopify:\/\/shop_images\/our-support.png",
+            "image_width": 192,
+            "image_align": "bottom",
+            "address": "<p>Prinz-Handjery-Str. 4, 14167 Berlin<\/p>",
+            "show_email": true,
+            "show_phone": true,
+            "show_newsletter": true
+          }
+        },
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "title": "Helfen",
+            "menu": "get-help"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Erfahren Sie mehr",
+            "menu": "learn-more"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "disabled": true,
+          "settings": {
+            "title": "Be Inspired By",
+            "menu": "be-inspired-by-1"
+          }
+        },
+        "menu-4": {
+          "type": "menu",
+          "settings": {
+            "title": "Kontaktiere uns",
+            "menu": "be-inspired-by"
+          }
+        }
+      },
+      "block_order": [
+        "footer-contacts",
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "menu-4"
+      ],
+      "settings": {
+        "show_policy": false,
+        "follow_on_shop": false,
+        "payment_enable": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

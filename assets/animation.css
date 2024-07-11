@@ -1,0 +1,26 @@
+@media screen and (min-width: 767px) {
+        .slide-top {
+                transform: translateY(30px);
+                animation: slideTop .5s linear forwards;
+        }
+
+        .title.slide-top {
+                animation-delay: .5s;
+        }
+
+        p.slide-top {
+                animation-delay: .75s;
+        }
+
+        .action.slide-top,
+        .button.slide-top {
+                animation-delay: 1.25s;
+        }
+}
+
+@keyframes slideTop {
+        100% {
+                transform: translate(0px);
+                opacity: 1;
+        }
+}

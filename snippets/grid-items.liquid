@@ -1,0 +1,519 @@
+{%- comment -%}
+    Render items grid
+
+    Accepst:
+    - ul_id                   {String}
+    - ul_class                {String}
+    - has_side_column         {Array}   Items to render
+    - items                   {Array}   Items to render
+    - columns                 {Number}
+    - limit                   {Number}
+    - mode                    {String}  grid|list
+    - badge_size              {String}
+    - image_ratio             {String}  Image ration for item
+    - product_secondary_image {Boolean}
+    - product_show_vendor     {Boolean}
+    - product_to_cart_button  {Boolean}
+    - swatch_option_color     {Boolean}
+    - product_description     {Boolean}
+    - compare_products        {Boolean}
+    - row_divider             {Boolean}
+    - preload_items_image     {Number}  Shopify preloads MAX ONLY 2 images per document
+{%- endcomment -%}
+
+{%- liquid
+    assign columns = columns | plus: 0
+    assign limit = limit | default: 50 | plus: 0
+    assign mode = mode | default: 'grid'
+    assign preloadItemsImage = preload_items_image | plus: 0
+-%}
+
+{%- comment -%}
+    Prepare settings for item image
+{%- endcomment -%}
+{%- liquid
+    capture image_sizes_config
+        render 'grid-item--item-image--sizes', mode: mode, columns: columns, has_side_column: has_side_column
+    endcapture
+-%}
+
+{%- liquid
+    if ul_id == null
+        assign ulSelector = '[data-mode="' | append: mode | append: '"][data-columns="' | append: columns | append: '"]'
+    else
+        assign ulSelector = '#' | append: ul_id
+    endif
+-%}
+{% style %}
+    {{ ulSelector }} {
+        display: flex;
+        margin: 1.25rem -.5rem 0;
+    }
+
+    {{ ulSelector }}  squama-item {
+        display: block;
+        position: relative;
+    }
+    {{ ulSelector }}  squama-item:hover > .item-link .item-title {
+        display: block;
+    }{% if product_description %}
+
+    {{ ulSelector }} .item-description {
+        display: none;
+        {% if mode == 'grid' -%}
+        font-size: calc(1rem - 2px);
+        margin-bottom: .75rem;
+        {% endif %}
+        {% if mode == 'list' -%}
+        font-size: calc(1rem - 1px);
+        margin: 1rem 0;
+        {% endif %}
+    }{% endif %}{% if product_secondary_image %}
+        .item-image__with-secondary img + img {
+            opacity: 0;
+        }
+        @media (max-width: 768px), print {
+            .item-image__with-secondary img + img.img_opacity_order {
+                opacity: 1;
+            }
+        }{% else %}
+
+        .item-image img + img {
+            opacity: 0;
+        }
+        .item-image img.img_opacity_order {
+            opacity: 1;
+        }{% endif %}
+
+    {{ ulSelector }} .item-link {
+        display:{% if mode == 'grid' %} block{% else %} grid{% endif %};
+        background-color: {{ settings.grid_item_bg_color }};
+        padding: .5rem;{% if mode == 'list' %}
+        align-items: flex-start;
+        --columns-gap: 1rem;
+        --columns-count: 2;
+        column-gap: var(--columns-gap);
+        grid-template-columns: min(var(--image-width, auto), calc(50% - var(--columns-gap, 0) / var(--columns-count, 1))) auto;{% endif %}
+        {%- if settings.check_theme_style == 'light' -%}
+        margin: 0 0.15rem;
+        border-radius: 4px;
+        {% endif %}
+    }
+
+    .grid-item .item-price > * {
+        display: inline-block;
+        margin: 0 .5rem 0 0;
+    }
+
+    .grid-item .item-price > :last-child {
+        margin: 0;
+    }
+
+    #main-collection-products:empty {
+        display: none;
+    }
+    #main-collection-products:not(:empty) ~ .pagination-wrapper {
+        border-bottom: 1px solid var(--color-foreground-8);
+        padding-bottom: 2rem;
+    }
+
+    @media (max-width: 768px), print {
+        #main-collection-products {
+            flex-wrap: wrap;
+        }
+    }
+
+    @media (min-width: 768px), print {
+        #main-collection-products {
+            min-height: 24rem;
+        }
+
+        squama-item {
+            overflow: {% if settings.product_card_hover_effect %}hidden{% else %}visible{% endif %};
+        }
+
+        .grid-item .item-link {
+            border: 1px solid transparent;{% comment %} This selector is lighter. It allows to overrides border property in component CSS easier.{% endcomment %}
+        }
+
+        {{ ulSelector }} {
+            margin: 0;
+        }
+
+        {{ ulSelector }} .item-link {
+            padding: .75rem;
+        }{% if product_description %}
+
+        {{ ulSelector }} squama-item[data-status="ready"] .item-description {
+            display: block;
+        }{% endif %}
+    }
+
+    @media (min-width: 600px), print {
+        #similar-products-tabbed[data-columns="1"] + .slider-buttons__container,
+        #similar-products-tabbed[data-columns="2"] + .slider-buttons__container,
+        #similar-products-tabbed[data-columns="3"] + .slider-buttons__container,
+        #similar-products-tabbed[data-columns="4"] + .slider-buttons__container {
+            display: none;
+        }
+    }
+
+    @media (min-width: 990px), print {
+        {{ ulSelector }} {
+            flex-wrap: wrap;
+        }
+
+        #similar-products-tabbed {overflow: visible;}
+    }
+
+    ul .item-actions-wrapper > button {
+      font-weight: 400;
+    }
+
+    /* grid items media - fit the element's content box. */
+    {% if settings.product_card_image_ratio == 'contain' %}
+    .grid-item .media > img {
+      object-fit: contain;
+    }{% endif %}
+
+    {% if mode == 'grid' -%}
+    #main-collection-products[data-mode="grid"] {
+        gap: .25rem 0;
+    }
+    {{ ulSelector }} .grid-item {
+        width:{% if columns > 1 %} calc(50% - 1px){% else %} 100%{% endif %};
+    }
+    {{ ulSelector }}.slider .grid-item {
+        width:{% if columns > 1 %} calc(50% + 1rem){% else %} 100%{% endif %};
+    }
+    {% if columns > 2 %}
+
+    @media (min-width: 640px), print {
+        {{ ulSelector }} .grid-item,
+        {{ ulSelector }}.slider .grid-item {
+            width: 33.333333%;
+        }
+    }{% endif %}{% if columns > 3 %}
+
+    @media (min-width: 768px), print {
+        {{ ulSelector }} .grid-item {
+            width: calc(25% - 1px);
+        }
+
+        {{ ulSelector }}.slider .grid-item {
+            width: calc(25% - 0.5rem);
+        }
+    }
+    @media (min-width: 990px), print {
+        {{ ulSelector }} .grid-item,
+        {{ ulSelector }}.slider .grid-item {
+            width: calc(25% - 1px);
+        }
+    }{% endif %}{% if columns > 4 %}
+
+    @media (min-width: 990px), print {
+        {{ ulSelector }} .grid-item,
+        {{ ulSelector }}.slider .grid-item {
+            width: calc(20% - 1px);
+        }
+    }{% endif %}{% if columns > 5 %}
+
+    @media (min-width: 1200px), print {
+        {{ ulSelector }} .grid-item,
+        {{ ulSelector }}.slider .grid-item {
+            width: 16.666667%;
+        }
+    }{% endif %}
+
+    /* grid items styles */
+    [data-mode="grid"] .item-details-wrapper {
+        font-size: calc(1rem - 1px);
+        line-height: 1.25rem;
+    }
+
+    {{ ulSelector }} .grid-item .item-vendor {
+        margin: .5rem 0 -.5rem;
+    }
+
+    {{ ulSelector }} .grid-item .item-title {
+        margin: .75rem 0 0;
+    }
+
+    {{ ulSelector }} .grid-item .item-price {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        padding: .75rem 0;
+    }
+
+    [data-mode="grid"] .item-price--with-label .label,
+    {{ ulSelector }} .grid-item .item-price ._lighter {
+        color: var(--color-foreground-75);
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    [data-mode="grid"] .item-price .price {
+        font-size: calc(1em + 1px);
+    }
+
+    [data-mode="grid"] .item-actions-wrapper > button  svg {
+        display: none;
+    }
+
+    [data-mode="grid"] .item-price--with-label .label {
+        height: 0;
+        opacity: 0;
+        overflow: clip;
+        position: absolute;
+        width: 0;
+    }
+
+    [data-mode="grid"] select-color-variants {
+        padding-top: .5rem;
+    }
+
+    [data-mode="grid"] .item-actions-wrapper {
+        text-align: center;
+    }
+
+    @media only screen and (min-width: 990px) {
+        [data-mode="grid"] squama-item:not([data-status="ready"]) .item-actions-wrapper,
+        [data-mode="grid"] squama-item:not([data-status="ready"]) .item-date ~ .item-author {
+            display: none;
+        }
+        {% if settings.product_card_hover_effect %}
+        {{ ulSelector }} .grid-item .item-title {
+            -webkit-line-clamp: 2;
+        }
+
+        {{ ulSelector }} squama-item:hover .item-details-wrapper {
+            border-bottom: 1px solid var(--color-foreground-10);
+            margin-bottom: -1px;
+        }
+
+        [data-mode="grid"] .judgeme-product-reviews-badge,
+        [data-mode="grid"] .item-price:not(.no-label) .price--compare {
+            display: none;
+        }
+
+        [data-mode="grid"] squama-item:hover .judgeme-product-reviews-badge,
+        [data-mode="grid"] squama-item:hover .item-price:not(.no-label) .price--compare,
+        [data-mode="grid"] squama-item.inner-focus .item-price:not(.no-label) .price--compare {
+            display: block;
+        }
+
+        [data-mode="grid"] .item-actions-wrapper {
+            visibility: hidden;
+        }
+
+        [data-mode="grid"] squama-item:hover .item-actions-wrapper {
+            visibility:visible;
+        }
+        {% else %}
+        {{ ulSelector }} [data-mode="grid"] squama-item .item-details-wrapper {
+            border-bottom: 1px solid var(--color-foreground-10);
+            margin-bottom: -1px;
+        }
+        {% endif %}
+        {{ ulSelector }} .grid-item .item-price {
+            display: block;
+            min-height: auto;
+            width: 100%;
+        }
+
+        [data-mode="grid"] .item-actions-wrapper > button {
+            display: flex;
+            float: none;
+            height: auto;
+            margin: 1rem auto 0;
+            width: auto;
+        }
+
+        [data-mode="grid"] .item-price--with-label .label,
+        [data-mode="grid"] .item-actions-wrapper > button .text {
+            height: auto;
+            opacity: 1;
+            position: static;
+            width: auto;
+        }
+
+        [data-mode="grid"] .item-actions-wrapper > button .text {
+            font-size: calc(1rem - 2px);
+        }
+
+        [data-mode="grid"] squama-item:hover .swatch-attribute-options .swatch-option_more,
+        [data-mode="grid"] squama-item:hover .swatch-attribute-options input[type=radio] + label {
+            display: flex;
+            align-items: center;
+        }
+    }
+    {%- else -%}
+    {{ ulSelector }} .grid-item {
+        width: 100%;
+    }
+
+    {{ ulSelector }} .grid-item:nth-child(n+2)::before {
+        background-color: var(--color-foreground-8);
+        content: '';
+        display: block;
+        height: 1px;
+        margin: 1rem auto;
+        width: 100%;
+    }
+
+    {{ ulSelector }} .item-image {
+        grid-row: span 2;
+    }
+
+    {{ ulSelector }} .item-price .price--final {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    {{ ulSelector }} .item-actions-wrapper > button {
+        height: 3rem;
+        margin: 1rem 0 0;
+        max-width: 12rem;
+        width: 100%;
+    }
+
+    @media all and (min-width: 480px) {
+        {{ ulSelector }} .item-link {
+            --columns-gap: 2rem;
+        }
+    }
+
+    @media all and (min-width: 768px) {
+        {{ ulSelector }} .grid-item:nth-child(n+2)::before {
+            width: calc(100% - 1.5rem);
+        }
+
+        {{ ulSelector }} .item-link {
+            grid-template-columns: min(var(--image-width, auto), calc(33.3% - var(--columns-gap, 0) / var(--columns-count, 1))) auto
+        }
+
+        {{ ulSelector }} [data-product-id] .item-link {
+            --columns-count: 3;
+            grid-template-columns: min(var(--image-width, auto), calc(33.3% - var(--columns-gap, 0) / var(--columns-count, 1))) auto min(12rem, calc(33.3% - var(--columns-gap, 0) / var(--columns-count, 1)));
+        }
+
+        {{ ulSelector }} .item-image {
+            grid-row: span 1;
+        }
+
+        {{ ulSelector }} .item-price .price--final {
+            font-size: 1.5rem;
+        }
+
+        {{ ulSelector }} .item-actions-wrapper > button {
+            margin: 2rem 0 0;
+        }
+    }
+
+    [data-mode="list"] select-color-variants {
+        padding-top: .75rem;
+    }
+
+    [data-mode="list"] .item-actions-wrapper .icon-cart {
+        display: none;
+    }
+
+    @media only screen and (min-width: 768px) {
+        [data-mode="list"] .grid-item .item-title {
+            -webkit-line-clamp: initial;
+        }
+    }
+    {%- endif %}
+{% endstyle %}
+
+<ul
+    {% unless ul_id == null %}
+        id="{{ ul_id }}"
+    {% endunless %}
+    {% unless ul_class == null %}
+        class="{{ ul_class }}"
+    {% endunless %}
+    data-mode="{{ mode }}"
+    data-columns="{{ columns }}"
+    data-id="{{ section.id }}"
+    {% if ul_id contains 'main-collection-products' %}
+        data-list-items="main-collection-products"
+    {% endif %}
+    data-use-hover-effect="{{ settings.product_card_hover_effect }}"
+>
+    {%- liquid
+        for itemCandidate in items limit: limit
+            if itemCandidate.object_type != null
+                assign item = itemCandidate
+            else
+                if all_products[itemCandidate] != nill
+                    assign item = all_products[itemCandidate]
+                endif
+            endif
+
+            assign preloadImage = false
+            if forloop.index0 < preloadItemsImage
+                assign preloadImage = true
+            endif
+
+            assign newProduct = false
+            assign preOrderProduct = false
+            assign customBadge = false
+            for variant in item.variants
+                if variant.metafields.custom.new != blank
+                    assign newProduct = true
+                endif
+
+                if variant.metafields.custom.preorder != blank
+                    assign preOrderProduct = true
+                endif
+
+                if variant.metafields.custom.custom != blank
+                    assign customBadge = true
+                endif
+            endfor
+
+            case item.object_type
+                when 'product'
+                    capture item_html
+                        render 'grid-item-product', mode: mode, product: item, image_ratio: image_ratio, image_sizes_config: image_sizes_config, image_preload: preloadImage, show_secondary_image: product_secondary_image, show_to_cart_button: product_to_cart_button, show_vendor: product_show_vendor, show_description: product_description, show_swatch_options_colors: swatch_option_color, show_compare: compare_products
+                    endcapture
+
+                    capture badges_html
+                        echo '<div class="badge-container">'
+                        render 'badge-onsale', product: item, size: badge_size
+                        render 'badge-soldout', product: item, size: badge_size
+
+                        # if metafields using to define the product badges
+                        if newProduct
+                            render 'badge-new', product: item, size: badge_size
+                        endif
+
+                        if preOrderProduct
+                            render 'badge-preorder', product: item, size: badge_size
+                        endif
+
+                        if customBadge
+                            render 'badge-custom', product: item, size: badge_size
+                        endif
+                        echo '</div>'
+                    endcapture
+                    echo item_html | replace: '<!-- badges_html -->', badges_html
+
+                when 'article', 'page'
+                    continue
+
+                else
+                    render 'grid-item-product', product: item, image_sizes_config: image_sizes_config, show_secondary_image: product_secondary_image, show_swatch_options_colors: swatch_option_color, show_to_cart_button: product_to_cart_button, show_vendor: product_show_vendor, show_description: product_description, image_ratio: image_ratio
+            endcase
+
+            if row_divider and forloop.last == false
+                assign modulo_index = forloop.index | modulo: columns
+                if modulo_index == 0
+                    echo '<li class="rows-divider"></li>'
+                endif
+            endif
+        endfor
+    -%}
+</ul>

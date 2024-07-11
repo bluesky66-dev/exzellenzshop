@@ -1,0 +1,273 @@
+{% comment %}
+    Renders an item for product grid
+
+    Accepts:
+    - product:                      {Object}  Product Liquid object
+    - image_ratio                   {String}
+    - image_sizes_config            {String}
+    - image_preload                 {Boolean}
+    - show_secondary_image:         {Boolean} Show the secondary image on hover. Default: false (optional)
+    - show_to_cart_button:          {Boolean}
+    - show_swatch_options_colors:   {Boolean}
+    - show_description:             {Boolean}
+    - show_compare:                 {Boolean}
+{% endcomment %}
+
+{% liquid
+    if product.media[1] != null and show_secondary_image
+        assign show_secondary_image = true
+    else
+        assign show_secondary_image = false
+    endif
+
+    unless current_collection
+        assign current_collection = collection
+    endunless
+
+    assign on_sale = false
+    if product.compare_at_price > product.price
+        assign on_sale = true
+    endif
+
+    assign sold_out = false
+    if product.available == false
+        assign sold_out = true
+    endif
+
+    assign show_to_cart_button = show_to_cart_button | default: false
+
+    assign isPreorder = false
+    assign productTags = product.tags | downcase
+    if productTags contains 'preorder' or productTags contains 'pre-order'
+        assign isPreorder = true
+    endif
+%}
+
+{% assign product_form_id = 'product-form-' | append: section.id | append: '-' | append: product.id %}
+
+<li
+    class="grid-item{% if sold_out %} sold-out{% endif %}{% if on_sale %} on-sale{% endif %} reveal-item"
+    data-product-id="{{ product.id }}"
+    style="--image-width: {{ image_sizes_config | default: 240 | split: '|' | first }}px"
+>
+    <squama-item
+        {% if settings.control_items_height and mode == 'grid' %}
+            data-status="ready" data-control-item-height="true" style="height:{{ settings.item_height }}px"
+        {% endif %}
+    >
+        <a href="{{ product.url | within: current_collection }}" class="item-link">
+            <div class="item-image {% if show_secondary_image %}item-image__with-secondary{% endif %}">
+                <!-- badges_html -->
+                {% assign featuredImage = product.featured_media.preview_image %}
+                <div
+                    class="media{% if settings.use_media_transparent %} media--transparent{% endif %}"
+                    style="padding-bottom: {% render 'helper__media-padding-bottom' image: featuredImage image_ratio: image_ratio %};"
+                >
+                    {% if featuredImage %}
+                        {% render 'grid-item--item-image',
+                            image: featuredImage,
+                            image_ratio: image_ratio,
+                            image_sizes_config: image_sizes_config,
+                            image_preload: image_preload
+                        %}
+                        {% if show_secondary_image %}
+                            {% render 'grid-item--item-image',
+                                image: product.media[1].preview_image,
+                                image_ratio: image_ratio,
+                                image_sizes_config: image_sizes_config
+                            %}
+                        {% endif %}
+                        {% if show_swatch_options_colors %}
+                            {% for m in product.media %}
+                                {% render 'grid-item--item-image',
+                                    image: m.preview_image,
+                                    image_ratio: image_ratio,
+                                    image_sizes_config: image_sizes_config
+                                %}
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        {{
+                            product.id
+                            | divided_by: 1000
+                            | modulo: 4
+                            | plus: 1
+                            | prepend: 'product-'
+                            | placeholder_svg_tag: 'placeholder-svg placeholder'
+                        }}
+                    {% endif %}
+                </div>
+                {%- if show_compare %}
+                    <compare-add-button>
+                        <button
+                            type="button"
+                            class="compare-add-button"
+                            data-product-id="{{ product.id }}"
+                            title="{{ 'sections.compare.add_to_compare' | t }}"
+                            aria-label="{{ 'sections.compare.add_to_compare' | t }}"
+                            onclick="document.querySelector('compare-popup')?.popupContent?.();return false;"
+                        >
+                            <span class="compare-icon">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="2"
+                                    stroke="currentColor"
+                                    aria-hidden="true"
+                                >
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                </svg>
+
+                                <span class="compare-checkmark">
+                                    {% render 'icons-outline', name: 'check', css_class: 'icon icon-checkmark hidden' %}
+                                </span>
+                            </span>
+                        </button>
+                    </compare-add-button>
+                {% endif -%}
+            </div>
+            <div class="item-details-wrapper">
+                {%- if show_vendor -%}
+                    <p class="item-vendor">
+                        <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+                        <span>{{ product.vendor | default: 'vendor' }}</span>
+                    </p>
+                {%- endif -%}
+                <p class="item-title">{{ product.title | default: 'Example product title' }}</p>
+
+                {% if settings.product_card_rating -%}
+                    <div class="judgeme-product-reviews-badge" data-id="{{ product.id }}">
+                        <span class="jdgm-widget jdgm-preview-badge">{{ product.metafields.judgeme.badge }}</span>
+                    </div>
+                {%- endif %}
+
+                {% unless mode == 'list' %}
+                    {% render 'helper__decorate-product-price',
+                        product: product,
+                        showPriceLabel: settings.price_label
+                    %}
+                {% endunless %}
+
+                {%- if show_swatch_options_colors -%}
+                    {%- render 'grid-items__swatch-options', product: product -%}
+                {%- endif -%}
+
+                {%- if show_description -%}
+                    <div class="item-description rte">
+                        {{- product.description | strip_html | truncatewords: 36 -}}
+                    </div>
+                {%- endif -%}
+            </div>
+            {% if mode == 'list' %}
+                <div class="item-actions-wrapper">
+                    {% render 'helper__decorate-product-price',
+                        product: product,
+                        showPriceLabel: settings.price_label
+                    %}
+                    {%- if show_to_cart_button != false -%}
+                        {%- liquid
+                            if product.has_only_default_variant
+                                assign buttonName = 'add'
+                                if product.selected_or_first_available_variant.available
+                                    assign buttonText = 'products.product.add_to_cart' | t
+                                    assign isButtonDisabled = false
+                                else
+                                    assign buttonText = 'products.product.sold_out' | t
+                                    assign isButtonDisabled = true
+                                endif
+                            else
+                                assign buttonName = 'view'
+                                assign buttonText = 'products.product.view_full_details' | t
+                                assign isButtonDisabled = false
+                            endif
+
+                            if isPreorder and product.selected_or_first_available_variant.available and product.selected_or_first_available_variant.inventory_quantity <= 0
+                                assign buttonName = 'pre-order'
+                                assign buttonText = 'products.product.pre_sale' | t
+                                assign isButtonDisabled = false
+                            endif
+                        -%}
+                        <button
+                            type="submit"
+                            name="{{ buttonName }}"
+                            class="button button--primary button--small{% if settings.show_button_ring_on_hover %} border--outline{% endif %}"
+                            form="{{ product_form_id }}"
+                            aria-label="{{ buttonText }}"
+                            title="{{ buttonText }}"
+                            {% if isButtonDisabled %}
+                                disabled
+                            {% endif %}
+                        >
+                            {% render 'icons-charge', name: 'cart', css_class: 'icon-cart' %}
+                            <span class="text">{{ buttonText }}</span>
+                        </button>
+                    {%- endif -%}
+                </div>
+            {% else %}
+                {%- if show_to_cart_button != false -%}
+                    <div class="item-actions-wrapper">
+                        {%- liquid
+                            if product.has_only_default_variant
+                                assign buttonName = 'add'
+                                if product.selected_or_first_available_variant.available
+                                    assign buttonText = 'products.product.add_to_cart' | t
+                                    assign isButtonDisabled = false
+                                else
+                                    assign buttonText = 'products.product.sold_out' | t
+                                    assign isButtonDisabled = true
+                                endif
+                            else
+                                assign buttonName = 'view'
+                                assign buttonText = 'products.product.view_full_details' | t
+                                assign isButtonDisabled = false
+                            endif
+
+                            if isPreorder and product.selected_or_first_available_variant.available and product.selected_or_first_available_variant.inventory_quantity <= 0
+                                assign buttonName = 'pre-order'
+                                assign buttonText = 'products.product.pre_sale' | t
+                                assign isButtonDisabled = false
+                            endif
+                        -%}
+                        <button
+                            type="submit"
+                            name="{{ buttonName }}"
+                            class="button button--primary button--small{% if settings.show_button_ring_on_hover %} border--outline{% endif %}"
+                            form="{{ product_form_id }}"
+                            aria-label="{{ buttonText }}"
+                            title="{{ buttonText }}"
+                            {% if isButtonDisabled %}
+                                disabled
+                            {% endif %}
+                        >
+                            {% render 'icons-charge', name: 'cart', css_class: 'icon-cart' %}
+                            <span class="text">{{ buttonText }}</span>
+                        </button>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+        </a>
+    </squama-item>
+    {%- if show_to_cart_button != false and product.id != blank -%}
+        {% if product.has_only_default_variant %}
+            <product-form class="product-form">
+                {% form 'product',
+                    product,
+                    id: product_form_id,
+                    class: 'form',
+                    novalidate: 'novalidate',
+                    data-type: 'add-to-cart-form'
+                %}
+                    <input
+                        type="hidden"
+                        name="id"
+                        value="{{ product.selected_or_first_available_variant.id }}"
+                        disabled
+                    >
+                {% endform %}
+            </product-form>
+        {% else %}
+            <form id="{{ product_form_id }}" action="{{ product.url | within: current_collection }}#has-options"></form>
+        {% endif %}
+    {% endif %}
+</li>

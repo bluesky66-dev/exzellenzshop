@@ -1,0 +1,56 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "footer-contacts": {
+          "type": "footer-contacts",
+          "settings": {
+            "image_show": true,
+            "image": "shopify:\/\/shop_images\/corp_footer.png",
+            "image_width": 170,
+            "image_align": "top"
+          }
+        },
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "title": "Quick links"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Quick links"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "title": "Quick links"
+          }
+        },
+        "menu-4": {
+          "type": "menu",
+          "settings": {
+            "title": "Quick links"
+          }
+        }
+      },
+      "block_order": [
+        "footer-contacts",
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "menu-4"
+      ],
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

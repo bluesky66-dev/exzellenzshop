@@ -1,0 +1,28 @@
+{%- comment -%}
+    Headings style applied
+
+    Accepts:
+    - heading {String}
+{%- endcomment -%}
+
+{%- liquid
+    assign heading = heading | escape
+    assign words = heading | split: ' '
+    assign headingStyle = settings.bold_first_heading_word
+
+    if words.size > 1 and headingStyle
+        for word in words
+            if forloop.first
+                echo '<b>'
+            endif
+            if forloop.last
+                echo '</b>'
+            endif
+            echo word | append: ' '
+        endfor
+    else
+        echo '<strong>'
+        echo heading
+        echo '</strong>'
+    endif
+-%}

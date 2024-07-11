@@ -1,0 +1,167 @@
+{%- liquid
+    assign sectionId = section.id | prepend: '#shopify-section-'
+    assign hasMessage = true
+    if section.settings.message == ''
+        assign hasMessage = false
+    endif
+-%}
+{% style %}
+    {%- if settings.check_theme_style == 'default' -%}
+        :root {
+            --header-top--text-color: #a9a9a9;
+            --header-top--border-color: #4c525b;
+        }
+        {{ sectionId }} {
+            background: var(--header--background-color);
+            color: rgba(var(--header--text-color-rgb), .6);
+        }
+    {%- else -%}
+        :root {
+            --header-top--text-color: #ffffff;
+            --header-top--bg-color: #132433;
+            --header-top--border-color: var(--color-foreground-10);
+        }
+        {{ sectionId }} {
+            background: var(--header-top--bg-color);
+            color: var(--header-top--text-color);
+        }
+    {%- endif -%}
+{% endstyle %}
+
+{% style %}
+    {{ sectionId }} {
+        display: block;
+        line-height: 1.25rem;
+        font-size: .875rem;
+        position: relative;
+        background: #E20048;
+        z-index: 30;{% if section.settings.add_border_bottom %}
+        box-shadow: inset 0px -1px 0px 0px rgba(var(--header--text-color-rgb), .3);{% endif %}
+    }
+
+    #header-top-inner {
+        display: flex;
+        gap: .5rem;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    #header-top-inner .message,
+    #header-top-inner .contacts {
+        flex: 1 1 0%;
+    }
+
+    #header-top-inner .contacts p {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: right;
+    }
+
+    #header-top-inner .contacts p .separator {
+        background: currentColor;
+        border-radius: 999px;
+        display: inline-block;
+        height: 5px;
+        width: 5px;
+    }
+
+    #header-top-inner :only-child p {
+        justify-content: center;
+        text-align: center;
+    }
+
+    @media all and (min-width: 990px) {
+
+    }
+
+    @media all and (max-width: 989px) {
+        {%- unless hasMessage -%}
+        {{ sectionId }} {
+            display: none;
+        }
+        {%- endunless %}
+        #header-top-inner .message {
+            text-align: center;
+        }
+        #header-top-inner .contacts {
+            display: none;
+        }
+    }
+{% endstyle %}
+
+<div
+    id="header-top-inner"
+    class="{% if section.settings.full_width %}full--width{% else %}dynamic-page-width{% endif %}"
+>
+    {% if hasMessage -%}
+        <div class="message">
+            <p>{{ section.settings.message }}</p>
+        </div>
+    {% endif %}
+
+    {% if section.settings.show_phone or section.settings.show_email -%}
+        <div class="contacts">
+            <p>
+                {% if section.settings.show_phone %}
+                    <a href="tel:{{ settings.contact_phone }}" title="{{ 'header_top.contact_phone.title' | t }}">
+                        {{- settings.contact_phone -}}
+                    </a>
+                    {% if section.settings.show_email %}<span class="separator"> </span>{% endif %}
+                {% endif %}
+                {% if section.settings.show_email %}
+                    <a href="mailto:{{ settings.contact_email }}" title="{{ 'header_top.contact_email.title' | t }}">
+                        {{- settings.contact_email -}}
+                    </a>
+                {% endif %}
+            </p>
+        </div>
+    {%- endif %}
+</div>
+
+{% schema %}
+{
+    "name": "t:sections.header_top.name",
+    "class": "header-top",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "full_width",
+            "label": "t:sections.header_top.settings.full_width.label",
+            "default": false
+        },
+        {
+            "type": "text",
+            "id": "message",
+            "label": "t:sections.header_top.settings.message.label",
+            "default": "Demo announcement message"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_phone",
+            "label": "t:sections.header_top.settings.show_phone.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_email",
+            "label": "t:sections.header_top.settings.show_email.label",
+            "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "add_border_bottom",
+          "default": true,
+          "label": "t:sections.header_top.settings.add_border_bottom.label"
+        }
+    ],
+    "presets": [
+        {
+          "name": "t:sections.header_top.presets.name"
+        }
+    ],
+    "enabled_on": {
+        "groups": ["header"]
+    }
+}
+{% endschema %}

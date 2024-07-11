@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "faqs": {
+      "type": "faqs-page",
+      "settings": {
+        "faqs_subtitle": "Hier finden Sie Antworten auf die am häufigsten gestellten Fragen zu unseren Produkten und Dienstleistungen"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "layout_max_width": 780
+      }
+    },
+    "icons_bar": {
+      "type": "icons-bar",
+      "blocks": {
+        "icon-bar-1": {
+          "type": "icon",
+          "settings": {
+            "icon": "truck",
+            "text": "<p><strong>FREE SHIPPING<\/strong><\/p><p>Free for orders over 100$<\/p>"
+          }
+        },
+        "icon-bar-2": {
+          "type": "icon",
+          "settings": {
+            "icon": "clock",
+            "text": "<p><strong>24\/7 Support<\/strong><\/p><p>Fast, professional support<\/p>"
+          }
+        },
+        "icon-bar-3": {
+          "type": "icon",
+          "settings": {
+            "icon": "calendar",
+            "text": "<p><strong>CHOOSE DELIVERY DATE<\/strong><\/p><p>Flexible delivery dates<\/p>"
+          }
+        },
+        "icon-bar-4": {
+          "type": "icon",
+          "settings": {
+            "icon": "clipboard-check",
+            "text": "<p><strong>EXTENDED SUPPORT PERIOD<\/strong><\/p><p>30 days return policy<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "icon-bar-1",
+        "icon-bar-2",
+        "icon-bar-3",
+        "icon-bar-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "background-2",
+        "visibility": "all",
+        "swipe_on_mobile": true,
+        "border": false,
+        "shadow": false,
+        "separator": false
+      }
+    }
+  },
+  "order": [
+    "faqs",
+    "main",
+    "icons_bar"
+  ]
+}

@@ -1,0 +1,143 @@
+/**
+ * Here are styles for all elements that come visible on interaction.
+ * So we can load them in separate CSS.
+ */
+.list-menu--disclosure:focus {
+  outline: none;
+}
+.list-menu--disclosure.localization-selector {
+  max-height: 18rem;
+  width: 10rem;
+  overflow: auto;
+  padding: 0.5rem;
+}
+.header__inline-menu > ul > [data-main-item-menu] {
+  position: relative;
+  opacity: 1;
+  z-index: 39;
+}
+.header-menu__overlay-element {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 30;
+  height: 100%;
+  opacity: 0;
+    transition: height .35s ease-in-out;
+}
+.header-menu__overlay-element.shown {
+  display: block;
+  opacity: 1;
+  animation: overlayFadeAnimation ease 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+@keyframes overlayFadeAnimation {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+.header [data-items-menu]  > .header__active-menu-item > span,
+.header [data-main-item-menu]  > .header__active-menu-item > span,
+.header [open] > .header__menu-item-top:not(.full-width),
+[data-main-item-menu] .header__submenu > li:hover summary:not(.full-width),
+[data-main-item-menu] .header__submenu > li:hover summary:not(.full-width) .icon-caret,
+[data-main-item-menu] .header__submenu > li:hover > a {
+  color: var(--color-base-accent-1);
+}
+.header [data-items-menu] .header__menu-item-1-highlighted.header__active-menu-item > span,
+.header [data-main-item-menu] .header__menu-item-1-highlighted.header__active-menu-item > span {
+  color: currentColor;
+}
+.header [open] > .header__menu-item-1-highlighted.full-width {
+  color: var(--color-base-accent-1);
+}
+[data-main-item-menu] .header__submenu > li:hover {
+    border-top: 1px solid var(--color-foreground-20);
+    border-bottom: 1px solid var(--color-foreground-20);
+    background-color: var(--color-background);
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+.header  [open] > .header__menu-item-1-highlighted,
+.header__submenu .header__menu-item.link_shop-all,
+.header .header__menu-item-top:not(.header__menu-item-1-highlighted):hover,
+.header .header__menu-item-top:not(.header__menu-item-1-highlighted):focus,
+.header .header__menu-item-top:not(.header__menu-item-1-highlighted):active,
+.header [data-items-menu] .header__menu-item-1-highlighted:hover > span,
+.header [data-items-menu] .header__menu-item-1-highlighted:focus > span,
+.header [data-items-menu] .header__menu-item-1-highlighted:active > span {
+  color: var(--color-base-accent-1);
+}
+.childlist-menu--disclosure,
+.list-menu--disclosure summary,
+.list-menu--disclosure .header__menu-item {
+  overflow-wrap: break-word;
+}
+.header  [open] > .header__menu-item-1-highlighted,
+.header .header__menu-item-1-highlighted:not(.full-width):hover,
+.header .header__menu-item-1-highlighted:not(.full-width):focus,
+.header .header__menu-item-1-highlighted:not(.full-width):active {
+  background-color: var(--header--dropdown-background, #fafafa);
+  color: var(--color-base-accent-1);
+}
+.header .highlite_parent_item_on_active_child [open] > .header__menu-item-top:not(.full-width),
+.header .highlite_parent_item_on_active_child .header__menu-item-top:hover {
+  color: currentColor;
+}
+.header .list-menu--disclosure {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+.header__submenu .header__submenu {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.header__submenu .header__menu-item {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+[data-main-item-menu] .small .list-menu--disclosure li > a {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.full-width .header__submenu summary:hover a {
+  color: var(--color-foreground-75);
+}
+.header__submenu .header__submenu .header__menu-item {
+  padding-left: 2rem;
+}
+.dropdown-inner__product-list li img,
+.dropdown-inner__collections li img {
+  transition: scale .2s;
+}
+.dropdown-inner__collections li:hover img,
+.dropdown-inner__collections li:focus img,
+.dropdown-inner__product-list li:hover img,
+.dropdown-inner__product-list li:focus img {
+  scale: 1.02;
+}
+.dropdown-inner__product-list li:hover .item-title,
+.dropdown-inner__product-list li:focus .item-title,
+.dropdown-inner__collections li:hover .item-title,
+.dropdown-inner__collections li:focus .item-title {
+  color: var(--color-foreground-75);
+}
+/*.header [open="true"] > summary.header__menu-item-top::after  {
+  content: '';
+  background-color: var(--header--dropdown-background);
+  position: absolute;
+  display: block;
+  height: 1rem;
+  bottom: -.75rem;
+  left: 48%;
+  width: 1rem;
+
+  @apply
+    transform rotate-45
+}*/

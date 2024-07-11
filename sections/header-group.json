@@ -1,0 +1,44 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header_top": {
+      "type": "header-top",
+      "settings": {
+        "message": "",
+        "show_phone": true,
+        "show_email": true,
+        "add_border_bottom": true
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify:\/\/shop_images\/palneca-log.png",
+        "logo_width": 160,
+        "show_switcher_language": true,
+        "show_switcher_country": true,
+        "enable_sticky_header": true,
+        "add_border_searchfield": false,
+        "add_border_bottom": false,
+        "menu": "main-menu",
+        "second_level_menu_width": "full-width",
+        "first_item_bg_highlighted": true,
+        "main_items_per_row": 4,
+        "second_dropdown_limit_qty_categories_link": "Shop All",
+        "second_dropdown_limit_qty_categories": 5
+      }
+    },
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "show_breadcrumbs_on_mobile": true
+      }
+    }
+  },
+  "order": [
+    "header_top",
+    "header",
+    "breadcrumbs"
+  ]
+}

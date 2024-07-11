@@ -1,0 +1,137 @@
+{{ 'component-compare-products.css' | asset_url | stylesheet_tag }}
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+    .compare-link > a {
+        background: {{ section.settings.link_bg_color }};
+        color: {{ section.settings.link_color }};
+    }
+
+    compare-add-button > button {
+        display: block;
+        padding-left: 0 !important;
+    }
+
+    .compare-icon > svg,
+    .compare-checkmark > svg {
+        width: 1.75rem;
+        height: 1.75rem;
+        padding: .25rem;
+        background: var(--color-background);
+        border: 1px solid var(--color-foreground-10);
+    }
+
+    [data-mode="list"] .compare-icon > svg,
+    [data-mode="list"] .compare-checkmark > svg {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    .compare-checkmark > svg {
+        color: #039603;
+    }
+
+    @media only screen and (min-width: 900px) {
+        .grid-item .compare-add-button {
+            visibility: hidden;
+            opacity: 0;
+            margin-bottom: -2rem;
+        }
+
+        .grid-item:hover .compare-add-button {
+            visibility: visible;
+            opacity: 1;
+            margin-bottom: initial;
+            transition: all .35s ease;
+            border: none;
+        }
+
+        [data-mode="list"] .compare-icon > svg,
+        [data-mode="list"] .compare-checkmark > svg {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+{% endstyle %}
+
+{% render 'compare-popup',
+    sticky_table_header: section.settings.sticky_table_header,
+    show_add_to_cart: section.settings.show_add_to_cart,
+    show_description: section.settings.show_product_description,
+    show_vendor: section.settings.show_product_vendor,
+    show_sku: section.settings.show_product_sku,
+    show_rating: section.settings.show_product_rating,
+    description_size: section.settings.truncate_product_description
+%}
+
+<script src="{{ 'compare-utils.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'compare-popup.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'compare-add-button.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "t:sections.compare.name",
+  "tag": "section",
+  "settings": [
+    {
+        "type": "checkbox",
+        "id": "sticky_table_header",
+        "label": "t:sections.compare.settings.sticky_table_header.label",
+        "default": false
+    },
+    {
+        "type": "checkbox",
+        "id": "show_add_to_cart",
+        "label": "t:sections.compare.settings.show_add_to_cart.label",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "show_product_description",
+        "label": "t:sections.compare.settings.show_product_description.label",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "show_product_vendor",
+        "label": "t:sections.compare.settings.show_product_vendor.label",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "show_product_sku",
+        "label": "t:sections.compare.settings.show_product_sku.label",
+        "default": false
+    },
+    {
+        "type": "checkbox",
+        "id": "show_product_rating",
+        "label": "t:sections.compare.settings.show_product_rating.label",
+        "default": true
+    },
+    {
+        "type": "text",
+        "id": "truncate_product_description",
+        "label": "t:sections.compare.settings.truncate_product_description.label",
+        "default": "50"
+    },
+    {
+        "type": "color",
+        "id": "link_color",
+        "label": "t:sections.compare.settings.link_color.label",
+        "default": "#ffffff"
+    },
+    {
+        "type": "color",
+        "id": "link_bg_color",
+        "label": "t:sections.compare.settings.link_bg_color.label",
+        "default": "#F54336"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.compare.name"
+    }
+  ]
+}
+{% endschema %}

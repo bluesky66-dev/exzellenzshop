@@ -1,0 +1,204 @@
+{%- comment -%}
+    Render Compare products list
+
+    Accept:
+    - products:                 {Object}
+    - sectionId:                {String}
+    - use_sticky_header:        {Bool}
+    - show_product_add_to_cart: {Bool}
+    - show_product_description: {Bool}
+    - show_product_vendor:      {Bool}
+    - show_product_sku:         {Bool}
+    - show_product_rating:      {Bool}
+    - product_description_size: {Numb}
+{%- endcomment -%}
+{% assign notAvailable = 'sections.compare.popup.not_available' | t %}
+<div class="content{% if use_sticky_header %} sticky_header{% endif %}">
+    {%- for product in products -%}
+        <div class="item" data-product-id="{{ product.id}}" data-index="{{ forloop.index }}">
+            <compare-remove-item>
+                <a
+                    href="#/"
+                    class="link remove-item"
+                    data-product-id="{{ product.id }}"
+                    title="{{ 'sections.compare.popup.link_remove_item' | t }}"
+                >
+                    <svg aria-hidden="true" focusable="false" width="8" height="8" role="presentation" class="icon-x">
+                        <use href="#icon-x" />
+                    </svg>
+                    {% comment %}<span class="label" hidden>{{ 'sections.compare.popup.link_remove_item' | t }}</span>{% endcomment %}
+                </a>
+            </compare-remove-item>
+            {% liquid
+                assign featuredImage = product.featured_media.preview_image
+                assign image_ratio = settings.product_card_image_ratio
+                assign imageWidth = '320px'
+                assign sizesConfig = '320|165,320|calc(#imageWidth# * {m})' | replace_all: '#imageWidth#', imageWidth
+            %}
+            {% comment %} Render Product Featured Image {% endcomment %}
+            <a href="{{ product.url }}" class="item-link block">
+                <div class="item-image{% if forloop.length == 1 %} single--product{% endif %}">
+                    <div
+                        class="media"
+                        style="padding-bottom: {% render 'helper__media-padding-bottom' image: featuredImage image_ratio: image_ratio %};"
+                    >
+                        {% if featuredImage %}
+                            {% render 'grid-item--item-image',
+                                image: featuredImage,
+                                image_sizes_config: sizesConfig,
+                                image_ratio: image_ratio,
+                                image_preload: false
+                            %}
+                        {% else %}
+                            <span class="_center">{{ notAvailable }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            <div class="column">
+                {% comment %} Render Product Vendor {% endcomment %}
+                {%- if show_product_vendor -%}
+                    <span class="vendor">{{ product.vendor | default: notAvailable }}</span>
+                {%- endif -%}
+
+                {% comment %} Render Product Title {% endcomment %}
+                <span class="item-title font-semibold">{{ product.title | default: notAvailable }}</span>
+
+                {% comment %} Render Add To Cart button {% endcomment %}
+                {%- if show_product_add_to_cart -%}
+                    {% assign product_form_id = forloop.index | append: '-' | append: section.id %}
+                    <div class="item-actions-wrapper">
+                        {%- if product.has_only_default_variant -%}
+                            <span class="item-added-to-cart__message">
+                                {{ 'sections.compare.popup.item_added_to_cart' | t }}
+                            </span>
+                        {%- endif -%}
+                        {%- liquid
+                            if product.has_only_default_variant
+                                assign buttonName = 'add'
+                                if product.selected_or_first_available_variant.available
+                                    assign buttonText = 'products.product.add_to_cart' | t
+                                    assign isButtonDisabled = false
+                                else
+                                    assign buttonText = 'products.product.sold_out' | t
+                                    assign isButtonDisabled = true
+                                endif
+                            else
+                                assign buttonName = 'view'
+                                assign buttonText = 'products.product.view_full_details' | t
+                                assign isButtonDisabled = false
+                            endif
+
+                            if isPreorder and product.selected_or_first_available_variant.available and product.selected_or_first_available_variant.inventory_quantity <= 0
+                                assign buttonName = 'pre-order'
+                                assign buttonText = 'products.product.pre_sale' | t
+                                assign isButtonDisabled = false
+                            endif
+                        -%}
+                        <button
+                            type="submit"
+                            name="{{ buttonName }}"
+                            class="button button--primary button--small{% if settings.show_button_ring_on_hover %} border--outline{% endif %}"
+                            form="{{ product_form_id }}"
+                            aria-label="{{ buttonText }}"
+                            title="{{ buttonText }}"
+                            {% if isButtonDisabled %}
+                                disabled
+                            {% endif %}
+                        >
+                            {% render 'icons-charge', name: 'cart', css_class: 'icon-cart' %}
+                            <span class="text">{{ buttonText }}</span>
+                        </button>
+                        {%- if show_to_cart_button != false and product.id != blank -%}
+                            {% if product.has_only_default_variant %}
+                                <product-form class="product-form">
+                                    {% form 'product',
+                                        product,
+                                        id: product_form_id,
+                                        class: 'form',
+                                        novalidate: 'novalidate',
+                                        data-type: 'add-to-cart-form'
+                                    %}
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="{{ product.selected_or_first_available_variant.id }}"
+                                            disabled
+                                        >
+                                    {% endform %}
+                                </product-form>
+                            {% else %}
+                                <form
+                                    id="{{ product_form_id }}"
+                                    action="{{ product.url | within: current_collection }}#has-options"
+                                ></form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {%- endif -%}
+            </div>
+            {%- unless forloop.last -%}<span class="row_divider"></span>{%- endunless -%}
+        </div>
+    {%- endfor -%}
+</div>
+
+{%- if show_product_sku -%}
+    {% comment %} Render Product SKU {% endcomment %}
+    <p class="h6 heading">{{ 'sections.compare.popup.product_sku' | t }}</p>
+    <div class="content highlight-row">
+        {%- for product in products -%}
+            {%- assign sku = product.selected_or_first_available_variant.sku | default: notAvailable -%}
+            <div class="item">
+                <p>
+                    <span class="value">{{ sku }}</span>
+                </p>
+                {%- unless forloop.last -%}<span class="row_divider"></span>{%- endunless -%}
+            </div>
+        {%- endfor -%}
+    </div>
+{%- endif -%}
+
+{% comment %} Render Product price {% endcomment %}
+<p class="h6 heading">{{ 'sections.compare.popup.product_price' | t }}</p>
+<div class="content highlight-row">
+    {%- for product in products -%}
+        <div class="item">
+            {% render 'helper__decorate-product-price', product: product %}
+            {%- unless forloop.last -%}<span class="row_divider"></span>{%- endunless -%}
+        </div>
+    {%- endfor -%}
+</div>
+
+{%- if show_product_rating -%}
+    {% comment %} Render Product rating {% endcomment %}
+    <p class="h6 heading">{{ 'sections.compare.popup.product_rating' | t }}</p>
+    <div class="content highlight-row">
+        {%- for product in products -%}
+            <div class="item">
+                <p class="judgeme-product-reviews-badge" data-id="{{ product.id }}">
+                    <span class="jdgm-widget jdgm-preview-badge">{{ product.metafields.judgeme.badge }}</span>
+                </p>
+                {%- unless forloop.last -%}<span class="row_divider"></span>{%- endunless -%}
+            </div>
+        {% endfor %}
+    </div>
+{%- endif -%}
+
+{%- if show_product_description -%}
+    {% comment %} Render Product Description {% endcomment %}
+    <p class="h6 heading">{{ 'sections.compare.popup.product_description' | t }}</p>
+    <div class="content highlight-row _description">
+        {%- for product in products -%}
+            <div class="item">
+                <p>
+                    {% if product.description != blank and product_description_size != '0' %}
+                        {{- product.description | strip_html | truncatewords: product_description_size -}}
+                    {% else %}
+                        {{- notAvailable -}}
+                    {% endif %}
+                </p>
+                {%- unless forloop.last -%}<span class="row_divider"></span>{%- endunless -%}
+            </div>
+        {%- endfor -%}
+    </div>
+{%- endif -%}

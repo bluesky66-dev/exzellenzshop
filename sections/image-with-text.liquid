@@ -1,0 +1,348 @@
+{%- if section.settings.two_column_layout -%}
+    {% assign sectionId = section.id | prepend: '#shopify-section-' %}
+    {% style %}
+        {{ sectionId }} .modern {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modern .content__desc {
+            padding: 1.5rem;
+        }
+
+        .modern .content__desc h2 {
+            font-weight: normal;
+        }
+
+        .modern .content__desc .action {
+            margin-top: 1.5rem;
+        }
+
+        .modern .content__img .placeholder {
+            height: 100%;
+        }
+
+        .modern .content__img:has(svg) {
+            border: 1px solid #E8E8E8;
+        }
+
+        @media (max-width: 475px), print {
+            .modern .content__img .media {
+                padding-bottom: 100%;
+            }
+        }
+
+        @media (min-width: 768px), print {
+            {{ sectionId }} .modern {
+                flex-direction: row;
+            }
+
+            {{ sectionId }} .modern.row__reverse {
+                flex-direction: row-reverse;
+            }
+
+            {{ sectionId }} .modern:not(.image-with-text--full-width) {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+
+            .modern .content__desc {
+                padding: 4rem 2rem;
+            }
+            .modern .content__desc h2 {
+                line-height: 1.35;
+                word-break: break-word;
+            }
+
+            {{ sectionId }} .text-animation .content__desc h2,
+            {{ sectionId }} .text-animation .content__desc p,
+            {{ sectionId }} .text-animation .content__desc .action {
+                opacity: 0;
+            }
+
+            .modern .content__desc .action {
+                margin-top: 2rem;
+            }
+
+            .modern .content__img {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .modern .content__img img {
+                transform: scale(1) scale3d(1, 1, 1);
+                -webkit-transition: -webkit-transform 0.75s ease-in-out;
+                -moz-transition: -moz-transform 0.75s ease-in-out;
+                transition: transform 0.75s ease-in-out;
+                image-rendering: pixelated;
+            }
+
+            .modern .content__img:hover img {
+                cursor: zoom-in;
+                transform: scale(1.01) scale3d(1.1, 1.1, 1);
+            }
+
+            .modern .content__img .media {
+                height: 100%;
+            }
+
+            .modern .content__img {
+                width: 100%;
+            }
+        }
+        @media (min-width: 1024px), print {
+            .modern .content__desc {
+                width: 35%;
+                padding: 2.5rem 1.5rem;
+            }
+            .modern .content__img {
+                width: 65%;
+            }
+        }
+        @media (min-width: 1200px), print {
+            .modern .content__desc {
+                padding: 6rem 4rem;
+            }
+        }
+    {% endstyle %}
+{%- else -%}
+    {{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- liquid
+    assign css_class_width = 'dynamic-page-width'
+    if section.settings.full_width
+        assign css_class_width = 'image-with-text--full-width'
+    endif
+
+    assign headingSize = section.blocks | where: 'type', 'heading' | first
+-%}
+{% style %}
+    .modern .content__desc,
+    .image-with-text__content {
+      background: {{ section.settings.cover_background_gradient | default: section.settings.cover_background }};
+      color: {{ section.settings.cover_text_color }};
+    }
+    .modern .content__desc h2,
+    .image-with-text__content h2 {
+      color: {{ section.settings.cover_text_color }};
+    }
+
+    @media (min-width: 768px), print {
+      .modern .content__desc h2,
+      .image-with-text__content h2 {
+        font-size: {{ headingSize.settings.heading_font_size | divided_by: 1.3 | floor }}px;
+      }
+    }
+    @media (min-width: 1024px), print {
+      .modern .content__desc h2,
+      .image-with-text__content h2 {
+        font-size: {{ headingSize.settings.heading_font_size }}px;
+      }
+    }
+{% endstyle %}
+
+{%- capture image_hhtml -%}
+<div class="{% if section.settings.image != blank %}media{% else %}image-with-text__media--placeholder placeholder{% endif %}"
+  {% if section.settings.image != blank %} style="padding-bottom: {{ 100 | divided_by: section.settings.image.aspect_ratio }}%;"{% endif %}
+>
+  {%- if section.settings.image != blank -%}
+    {% if section.settings.full_width %}
+      {% render 'render-image'
+        image: section.settings.image
+        sizes: '100vw'
+        widths: '640,720,900,1080,1920,#iw#'
+      %}
+    {%- else -%}
+      {% render 'render-image'
+        image: section.settings.image
+        sizes: '(max-width: 767px) calc(100vw - 2rem), (max-width: 1279px) calc(100vw - 6rem), 1176px'
+        widths: '360,640,940,1176,#iw#'
+      %}
+    {%- endif -%}
+  {%- else -%}
+    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+  {%- endif -%}
+</div>
+{%- endcapture -%}
+
+{% if section.settings.two_column_layout %}
+    <div class="modern text-animation {{ css_class_width }}{% if section.settings.text_align == 'right' %} row__reverse{% endif %}">
+        <div class="content__desc">
+            <div class="description">
+                {% render 'image_with_text', blocks: section.blocks %}
+            </div>
+        </div>
+        <div class="content__img">
+            {{ image_hhtml }}
+        </div>
+    </div>
+
+{% else %}
+    <div class="image-with-text {{ css_class_width }}">
+        <div class="image-with-text__inner">
+            {% unless section.settings.layout == 'text_first' %}
+                {{ image_hhtml }}
+            {% endunless %}
+
+            <div class="image-with-text__content" style="text-align: {{ section.settings.text_align }};">
+                {% render 'image_with_text', blocks: section.blocks %}
+            </div>
+
+            {% if section.settings.layout == 'text_first' %}
+                {{ image_hhtml }}
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.image-with-text.name",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": false,
+      "label": "t:sections.image-with-text.settings.full_width.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "two_column_layout",
+      "label": "t:sections.image-with-text.settings.two_column_layout.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.image-with-text.settings.image.label"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "t:sections.image-with-text.settings.layout.options__1.label"
+        },
+        {
+          "value": "text_first",
+          "label": "t:sections.image-with-text.settings.layout.options__2.label"
+        }
+      ],
+      "default": "image_first",
+      "label": "t:sections.image-with-text.settings.layout.label",
+      "info": "t:sections.image-with-text.settings.layout.info"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.image-with-text.settings.text_align.option__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.text_align.option__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.image-with-text.settings.text_align.option__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.image-with-text.settings.text_align.label"
+    },
+    {
+      "type": "color",
+      "id": "cover_text_color",
+      "label": "t:sections.image-with-text.settings.cover_text_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cover_background",
+      "label": "t:sections.image-with-text.settings.cover_background.label",
+      "default": "#101824"
+    },
+    {
+      "type": "color_background",
+      "id": "cover_background_gradient",
+      "label": "t:sections.image-with-text.settings.cover_background_gradient.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.image-with-text.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Image with text",
+          "label": "t:sections.image-with-text.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "range",
+          "id": "heading_font_size",
+          "min": 30,
+          "max": 54,
+          "step": 2,
+          "default": 48,
+          "unit": "px",
+          "label": "t:sections.image-with-text.blocks.heading.settings.heading_font_size.label"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.image-with-text.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+          "label": "t:sections.image-with-text.blocks.text.settings.text.label"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.image-with-text.blocks.button.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:sections.image-with-text.blocks.button.settings.button_label.label",
+          "info": "t:sections.image-with-text.blocks.button.settings.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.image-with-text.blocks.button.settings.button_link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image-with-text.presets.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

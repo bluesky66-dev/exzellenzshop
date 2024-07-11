@@ -1,0 +1,107 @@
+{%- comment -%}
+    Multicolumn content
+
+    Accepts:
+    - section:              {Object}
+    - block:                {Object}
+    - image_ratio:          {Numb}
+    - image_width_divider:  {Numb}
+{%- endcomment -%}
+{% if block.settings.image_enabled %}
+    <div class="multicolumn-card__image-wrapper image--{{ block.settings.image_position }}">
+        <div
+            class="media media--transparent"
+            style="padding-bottom: {{ 100.0 | divided_by: image_ratio }}%{% if section.settings.image_ratio == 'circle'%}; border-radius: 100%;{% endif %}"
+        >
+            {%- if block.settings.image != blank -%}
+                {%- liquid
+                    assign imageWidth = block.settings.image.width
+                    assign imageWidthMax = 1280 | divided_by: image_width_divider
+                    if imageWidth > imageWidthMax
+                        assign imageWidth = imageWidthMax
+                    endif
+                -%}
+                {% render 'render-image', image: block.settings.image, widths: imageWidth, sizes: image_sizes %}
+            {%- else -%}
+                {% if section.id contains 'home-banners-1' %}
+                    {% assign style_rules = 'display:flex; height:100%' %}
+                    <div style="background: #d4d8da; {{ style_rules }}">{{ 'collection-1' | placeholder_svg_tag }}</div>
+                {% else %}
+                    <div style="{{ style_rules }}">{{ 'collection-5' | placeholder_svg_tag }}</div>
+                {% endif %}
+            {%- endif -%}
+        </div>
+
+        {% unless block.settings.image_position == 'contain' %}
+            <div class="multicolumn-card__content _{{ block.settings.image_position }}">
+                {%- if block.settings.sub_title != blank %}
+                    <span
+                        class="sub_title"
+                        style="color: {{ block.settings.color_title }};background:{{ block.settings.subtitle_background_gradient | default: block.settings.bg_color_subtitle }}"
+                    >
+                        {{- block.settings.sub_title | escape -}}
+                    </span>
+                {%- endif -%}
+                {%- if block.settings.title != blank %}
+                    <h3
+                        class="title"
+                        style="color: {{ block.settings.color_title }};{% if block.settings.use_bold_heading %}font-weight: bold;{% endif %}"
+                    >
+                        {{ block.settings.title | escape }}
+                    </h3>
+                {% endif -%}
+                {%- if block.settings.text != blank %}
+                    <div class="rte text" style="color: {{ block.settings.color_text }}">{{ block.settings.text }}</div>
+                {% endif -%}
+                {% if block.settings.link != blank
+                    and block.settings.link_appearance != 'image_link'
+                    and block.settings.button_label != blank
+                %}
+                    <a
+                        href="{{ block.settings.link }}"
+                        class="{% if settings.show_button_ring_on_hover %}border--outline {% endif %}{% case block.settings.link_appearance %}{% when 'button' %}button button--primary animate-arrow{% when 'button_secondary' %}button animate-arrow{% when 'image_link' %} link{% endcase %} view-all"
+                        title="{{ block.settings.button_label }}"
+                    >
+                        <span>{{ block.settings.button_label }}</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endunless %}
+    </div>
+{% endif %}
+
+{% unless block.settings.image_position == 'cover' %}
+    <div class="multicolumn-card__content _{{ block.settings.image_position }}">
+        {%- if block.settings.sub_title != blank %}
+            <span
+                class="sub_title"
+                style="color: {{ block.settings.color_title }};background:{{ block.settings.subtitle_background_gradient | default: block.settings.bg_color_subtitle }}"
+            >
+                {{- block.settings.sub_title | escape -}}
+            </span>
+        {%- endif -%}
+        {%- if block.settings.title != blank %}
+            <h3
+                class="title"
+                style="color: {{ block.settings.color_title }};{% if block.settings.use_bold_heading %}font-weight: bold;{% endif %}"
+            >
+                {{ block.settings.title | escape }}
+            </h3>
+        {% endif -%}
+        {%- if block.settings.text != blank %}
+            <div class="rte text" style="color: {{ block.settings.color_text }}">{{ block.settings.text }}</div>
+        {% endif -%}
+        {% if block.settings.link != blank
+            and block.settings.link_appearance != 'image_link'
+            and block.settings.button_label != blank
+        %}
+            <a
+                href="{{ block.settings.link }}"
+                class="{% if settings.show_button_ring_on_hover %}border--outline {% endif %}{% case block.settings.link_appearance %}{% when 'button' %}button button--primary animate-arrow{% when 'button_secondary' %}button animate-arrow{% when 'image_link' %} link{% endcase %} view-all"
+                title="{{ block.settings.button_label }}"
+            >
+                <span>{{ block.settings.button_label }}</span>
+            </a>
+        {% endif %}
+    </div>
+{% endunless %}

@@ -1,0 +1,61 @@
+{% comment %}
+    Initialization css sources to be loaded them async
+
+    Accepts sources:
+    - init_component_listing_grid:  {String}
+    - init_component_price:         {String}
+{% endcomment %}
+{% liquid
+    if init_component_listing_grid != blank
+        assign componentListingGrid = init_component_listing_grid | asset_url
+    endif
+
+    if init_component_price != blank
+        assign componentPrice = init_component_price | asset_url
+    endif
+%}
+
+<script type="application/json" id="stylesheet__object">
+    {
+        "componentlistingGrid"  : "{{ componentListingGrid | default: 'null' }}",
+        "componentPrice"        : "{{ componentPrice | default: 'null' }}"
+    }
+</script>
+<script type="module">
+    
+    const stylesObject = JSON.parse(document.getElementById("stylesheet__object").textContent);
+    const styleURLs = [];
+
+    async function loadCSSStyles (url) {
+        styleURLs.push(url);
+        return new Promise((resolve, reject) => {
+            Promise.all(styleURLs.map(async style => await fetchStyle(style)));
+            resolve();
+        });
+    };
+
+    const fetchStyle = (href) => {
+        return new Promise((resolve, reject) => {
+            let link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.media = "all";
+            link.href = href;
+            link.onload = () => resolve();
+            link.onerror = () => reject(new Error(`Style load error for ${href}`));
+
+            document.head.appendChild(link);
+        });
+    }
+
+    function init() {
+        if(!Object.keys(stylesObject).length) return;
+
+        for (const s in stylesObject) {
+            if (stylesObject[s] !== "null") loadCSSStyles(stylesObject[s]);
+        }
+    }
+
+    init();
+
+</script>

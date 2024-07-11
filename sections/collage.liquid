@@ -1,0 +1,839 @@
+{{ 'section-collage.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+
+<div class="collage-wrapper{% if settings.check_theme_style == 'light' %} full--width__no-paddings{% else %} dynamic-page-width{% endif %}{% if section.settings.heading == blank %} no-heading{% endif %}">
+    {%- if section.settings.heading != blank -%}
+        <{{ section.settings.heading_size }} class="collage-wrapper-title">
+            {%- render 'helper__decorate-heading', heading: section.settings.heading -%}
+        </{{ section.settings.heading_size }}>
+    {%- endif -%}
+
+    <div
+        class="collage collage--{{ section.settings.desktop_layout }}{% if section.settings.mobile_layout == 'collage' %} collage--mobile{% endif %}"
+        data-blocks-size="{{ section.blocks.size }}"
+    >
+        {%- for block in section.blocks -%}
+            {% liquid
+                assign focus_card_left = false
+                if section.settings.desktop_layout == 'left' and forloop.first
+                    assign focus_card_left = true
+                elsif section.settings.desktop_layout == 'right' and forloop.last
+                    assign focus_card_right = true
+                endif
+            %}
+            {%- case block.type -%}
+                {%- when 'image' -%}
+                    {%- liquid
+                        assign paddingBottom = 75
+                        if block.settings.image != blank
+                            assign paddingBottom = 100 | divided_by: block.settings.image.aspect_ratio
+                            assign imageWidth = '326,652,978,1182,1340,2364'
+                            assign imageSizes = '(max-width: 767px) calc(100vw - 2rem - 2px), (max-width: 1279px) calc(100vw - 6rem - 2px), 1182px'
+                        endif
+                    -%}
+                    <div
+                        class="collage-card color-{{ block.settings.color_scheme }}{% if focus_card_left %} collage-card--left{% elsif focus_card_right %} collage-card--right{% endif %}"
+                        {{ block.shopify_attributes }}
+                    >
+                        <div
+                            class="collage-content collage-card__image-wrapper media media--transparent"
+                            {% if paddingBottom %}
+                                style="padding-bottom: {{ paddingBottom }}%;"
+                            {% endif %}
+                        >
+                            {%- if block.settings.image != blank -%}
+                                {% render 'render-image',
+                                    image: block.settings.image,
+                                    widths: imageWidth,
+                                    sizes: imageSizes,
+                                    css_class: ''
+                                %}
+                            {%- else -%}
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image' }}
+                            {%- endif -%}
+                        </div>
+                    </div>
+
+                {%- when 'product' -%}
+                    {%- liquid
+                        if block.settings.product != blank
+                            assign product_title = block.settings.product.title | escape
+                        else
+                            assign product_title = 'onboarding.product_title' | t
+                        endif
+
+                        assign paddingBottom = 75
+                        if block.settings.product.featured_image
+                            assign paddingBottom = 100 | divided_by: block.settings.product.featured_image.aspect_ratio
+                            assign imageWidth = '326,652,978,1182,1340,2364'
+                            assign imageSizes = '(max-width: 767px) calc(100vw - 2rem - 2px), (max-width: 1279px) calc(100vw - 6rem - 2px), 1182px'
+                        endif
+                    -%}
+                    {% style %}
+                        .collage-product .product__secondary-image {
+                            visibility: hidden;
+                            opacity: 0;
+                            transition: visibility .35s, opacity .5s;
+                        }
+                        .collage-product:hover .product__secondary-image,
+                        .collage-product:focus .product__secondary-image {
+                            visibility: visible;
+                            opacity: 1;
+                        }
+                    {% endstyle %}
+                    <a
+                        href="{{ block.settings.product.url }}"
+                        title="{{ product_title }}"
+                        class="collage-card collage-product color-{{ block.settings.color_scheme }} card-wrapper{% if focus_card_left %} collage-card--left{% elsif focus_card_right %} collage-card--right{% endif %}"
+                        {{ block.shopify_attributes }}
+                    >
+                        <div class="product-image animate-arrow">
+                            {% if block.settings.product.featured_image %}
+                                <div
+                                    class="media"
+                                    {% if paddingBottom %}
+                                        style="padding-bottom: {{ paddingBottom }}%;"
+                                    {% endif %}
+                                >
+                                    {% render 'render-image',
+                                        image: block.settings.product.featured_image,
+                                        widths: imageWidth,
+                                        sizes: imageSizes,
+                                        css_class: 'product__main-image'
+                                    %}
+                                    {%- if settings.product_card_secondary_image -%}
+                                        {% render 'render-image',
+                                            image: block.settings.product.media[1].preview_image,
+                                            widths: imageWidth,
+                                            sizes: imageSizes,
+                                            css_class: 'product__secondary-image'
+                                        %}
+                                    {%- endif -%}
+                                </div>
+                            {% else %}
+                                <div
+                                    class="media"
+                                    {% if paddingBottom %}
+                                        style="padding-bottom: {{ paddingBottom }}%;"
+                                    {% endif %}
+                                >
+                                    {{
+                                        block.settings.product.id
+                                        | divided_by: 1000
+                                        | modulo: 4
+                                        | plus: 1
+                                        | prepend: 'product-'
+                                        | placeholder_svg_tag: 'placeholder-svg placeholder'
+                                    }}
+                                </div>
+                            {% endif %}
+                            <div class="collage-card-title">
+                                <span class="title product--title">
+                                    {{ block.settings.product.title }}
+                                </span>
+                                {% render 'render-price',
+                                    price: block.settings.product.price,
+                                    css_class: 'price regular-price price--final text-lg font-medium'
+                                %}
+                            </div>
+                        </div>
+                    </a>
+
+                {%- when 'collection' -%}
+                    {%- liquid
+                        if block.settings.collection != blank
+                            assign collection_title = block.settings.collection.title | escape
+                        else
+                            assign collection_title = 'onboarding.collection_title' | t
+                        endif
+
+                        assign paddingBottom = 75
+                        if block.settings.collection.featured_image
+                            assign paddingBottom = 100 | divided_by: block.settings.collection.featured_image.aspect_ratio
+                            assign imageWidth = '326,652,978,1182,1340,2364'
+                            assign imageSizes = '(max-width: 767px) calc(100vw - 2rem - 2px), (max-width: 1279px) calc(100vw - 6rem - 2px), 1182px'
+                        endif
+                    -%}
+                    <a
+                        href="{{ block.settings.collection.url }}"
+                        title="{{ collection_title }}"
+                        class="collage-card color-{{ block.settings.color_scheme }}{% if focus_card_left %} collage-card--left{% elsif focus_card_right %} collage-card--right{% endif %}"
+                        {{ block.shopify_attributes }}
+                    >
+                        <div class="product-image animate-arrow">
+                            <div
+                                class="media"
+                                {% if paddingBottom %}
+                                    style="padding-bottom: {{ paddingBottom }}%;"
+                                {% endif %}
+                            >
+                                {% if block.settings.collection.featured_image %}
+                                    {% render 'render-image',
+                                        image: block.settings.collection.featured_image,
+                                        widths: imageWidth,
+                                        sizes: imageSizes,
+                                        css_class: ''
+                                    %}
+                                {% else %}
+                                    {{
+                                        block.settings.collection.id
+                                        | divided_by: 1000
+                                        | modulo: 6
+                                        | plus: 1
+                                        | prepend: 'collection-'
+                                        | placeholder_svg_tag: 'placeholder-svg placeholder flex-1'
+                                    }}
+                                {% endif %}
+                            </div>
+                            <div class="collage-card-title">
+                                <span class="title collection--title">
+                                    {{ block.settings.collection.title }}
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+
+                {%- when 'video' -%}
+                    {%- liquid
+                        assign paddingBottom = 7200 | divided_by: 128.0
+                        if block.settings.cover_image
+                            assign paddingBottom = 100 | divided_by: block.settings.cover_image.aspect_ratio
+                            assign imageWidth = '326,652,978,1182,1340,2364'
+                            assign imageSizes = '(max-width: 767px) calc(100vw - 2rem - 2px), (max-width: 1279px) calc(100vw - 6rem - 2px), 1182px'
+                        endif
+
+                        assign coverText = block.settings.cover_text | escape
+                    -%}
+
+                    {% style %}
+                        /* deffered media button styles */
+                            .collage[data-blocks-size="1"] {
+                                display: flex;
+                                flex-direction: column;
+                            }
+
+                            .collage .deferred-media__poster-button {
+                                border: 1px solid;
+                                border-radius: 9999px;
+                                padding: .75rem;
+                                background: transparent;
+                            }
+
+                            .collage .deferred-media__poster-button {
+                                width: 6rem;
+                                height: 6rem;
+                            }
+
+                            @media (min-width: 767px), print {
+                                .collage .deferred-media__poster-button {
+                                    width: 8rem;
+                                    height: 8rem;
+                                }
+                            }
+
+                            @media (min-width: 990px), print {
+                                .collage .deferred-media__poster-button {
+                                    width: 10rem;
+                                    height: 10rem;
+                                }
+                            }
+                            {% unless coverText == blank %}
+                            .collage-cart__with-text {
+                                position: absolute;
+                                top: 50%;
+                                width: 50%;
+                                padding: 1rem;
+                                transform: translateY(-50%);
+                                background: rgba({{ block.settings.content_background.red }},{{ block.settings.content_background.green }},{{ block.settings.content_background.blue }}, {{ block.settings.content_background_opacity }}%);
+                                border-radius: 8px;
+                            }
+
+                            .collage-cart__with-text._right {
+                                right: 1rem;
+                            }
+
+                            .collage-cart__with-text._left {
+                                left: 1rem;
+                            }
+
+                            .collage-cart__with-text > span {
+                                font-size: 1.5rem;
+                                color: {{ block.settings.text_color }};
+                                line-height: 1.25;
+                            }
+
+                            [data-content-position="right"] .deferred-media__poster-button {
+                                left: 25%;
+                            }
+
+                            [data-content-position="left"] .deferred-media__poster-button {
+                                right: 25%;
+                                left: unset;
+                            }
+
+                            @media (min-width: 767px), print {
+                                .collage-cart__with-text > span {
+                                    font-size: 3rem;
+                                }
+
+                                .collage[data-blocks-size="2"] .collage-cart__with-text > span {
+                                    font-size: 2.25rem;
+                                }
+
+                                .collage .deferred-media__poster-button {
+                                    padding: 2rem;
+                                }
+                            }
+
+                            @media (min-width: 990px), print {
+                                .collage .deferred-media__poster-button {
+                                    padding: 2.5rem;
+                                }
+
+                                .collage-cart__with-text._right {
+                                    right: 2rem;
+                                }
+
+                                .collage-cart__with-text._left {
+                                    left: 2rem;
+                                }
+
+                                .collage[data-blocks-size="1"] .collage-cart__with-text {
+                                    padding: {{ block.settings.inner_paddings }}rem;
+                                }
+
+                                .collage[data-blocks-size="1"] .collage-cart__with-text > span {
+                                    font-size: {{ block.settings.text_font_size }}rem;
+                                }
+
+                            }{% endunless %}
+                    {% endstyle %}
+
+                    <div
+                        class="collage-card collage-video{% if focus_card_left %} collage-card--left{% elsif focus_card_right %} collage-card--right{% endif %}"
+                        {% if coverText != blank %}
+                            data-content-position="{{ block.settings.content_position }}"
+                        {% endif %}
+                        {{ block.shopify_attributes }}
+                    >
+                        {% if block.settings.internal_video_link != blank %}
+                            <video
+                                style="width:{{ block.settings.video_width }}%;object-fit:cover;"
+                                {% if block.settings.autoplay_internal_video %}
+                                    autoplay muted loop
+                                {% endif %}
+                            >
+                                <source src="{{ block.settings.internal_video_link | escape }}" type="video/mp4">
+                                {{ collage.video.not_supported | t }}
+                            </video>
+                        {% else %}
+                            <noscript>
+                                <a
+                                    href="{{ block.settings.video_url }}"
+                                    class="card{% if block.settings.cover_image == blank %} collage-video-placeholder{% endif %}"
+                                >
+                                    <div class="media media--transparent" style="padding-bottom: {{ paddingBottom }}%;">
+                                        {%- if block.settings.cover_image != blank -%}
+                                            {% render 'render-image',
+                                                image: block.settings.product.featured_image,
+                                                widths: imageWidth,
+                                                sizes: imageSizes,
+                                                css_class: ''
+                                            %}
+                                        {%- elsif block.settings.video_url.type -%}
+                                            <img
+                                                src="https://img.youtube.com/vi/{{ block.settings.video_url.id }}/maxresdefault.jpg"
+                                                width="107"
+                                                height="156"
+                                                loading="lazy"
+                                            >
+                                        {%- else -%}
+                                            {{
+                                                'collection-2'
+                                                | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image'
+                                            }}
+                                        {%- endif -%}
+                                        <span class="deferred-media__poster-button motion-reduce">
+                                            {%- render 'icons-ion', name: 'play', css_class: 'icon-play' -%}
+                                        </span>
+                                    </div>
+                                </a>
+                            </noscript>
+                            {%- if section.blocks.size == 1 -%}
+                                <deferred-media
+                                    class="deferred-media media no-js-hidden"
+                                    data-media-id="{{ block.settings.video_url.id }}"
+                                    {% if paddingBottom %}
+                                        style="padding-bottom: {{ paddingBottom }}%;"
+                                    {% endif %}
+                                >
+                                    <button
+                                        id="Deferred-Poster-Modal-{{ block.settings.video_url.id }}"
+                                        class="collage-content collage-card__image-wrapper media deferred-media__poster"
+                                        type="button"
+                                    >
+                                        {%- if block.settings.cover_image != blank -%}
+                                            {% render 'render-image',
+                                                image: block.settings.cover_image,
+                                                widths: imageWidth,
+                                                sizes: imageSizes,
+                                                css_class: ''
+                                            %}
+                                        {%- elsif block.settings.video_url.type -%}
+                                            <img
+                                                src="https://img.youtube.com/vi/{{ block.settings.video_url.id }}/maxresdefault.jpg"
+                                                width="107"
+                                                height="156"
+                                                loading="lazy"
+                                            >
+                                        {%- else -%}
+                                            {{
+                                                'collection-2'
+                                                | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image'
+                                            }}
+                                            }
+                                        {%- endif -%}
+                                        <span class="deferred-media__poster-button motion-reduce">
+                                            {%- render 'icons-ion', name: 'play', css_class: 'icon-play' -%}
+                                        </span>
+                                    </button>
+                                    <template>
+                                        {%- if block.settings.video_url.type == 'youtube' -%}
+                                            <iframe
+                                                src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&loop=1&playlist={{ block.settings.video_url.id }}&enablejsapi=1"
+                                                class="js-youtube"
+                                                allow="autoplay; encrypted-media"
+                                                allowfullscreen
+                                                title="{{ block.settings.description | escape }}"
+                                            ></iframe>
+                                        {%- else -%}
+                                            <iframe
+                                                src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&loop=1"
+                                                class="js-vimeo"
+                                                allow="autoplay; encrypted-media"
+                                                allowfullscreen
+                                                title="{{ block.settings.description | escape }}"
+                                            ></iframe>
+                                        {%- endif -%}
+                                    </template>
+                                </deferred-media>
+                            {%- else -%}
+                                <modal-opener class="no-js-hidden" data-modal="#PopupModal-{{ block.id }}">
+                                    <button
+                                        class="collage-content collage-card__image-wrapper deferred-media__poster button--small"
+                                        type="button"
+                                        aria-haspopup="dialog"
+                                        data-media-id="{{ block.settings.video_url.id }}"
+                                    >
+                                        <div
+                                            class="deferred-media media{% if block.settings.cover_image == blank %} deferred-media--placeholder{% endif %}"
+                                            {% if paddingBottom %}
+                                                style="padding-bottom: {{ paddingBottom }}%;"
+                                            {% endif %}
+                                        >
+                                            <span class="deferred-media__poster-button motion-reduce">
+                                                {%- render 'icons-ion', name: 'play', css_class: 'icon-play' -%}
+                                            </span>
+
+                                            {%- if block.settings.cover_image != blank -%}
+                                                {% render 'render-image',
+                                                    image: block.settings.cover_image,
+                                                    widths: imageWidth,
+                                                    sizes: imageSizes,
+                                                    css_class: ''
+                                                %}
+                                            {%- else -%}
+                                                <img
+                                                    src="https://img.youtube.com/vi/{{ block.settings.video_url.id }}/maxresdefault.jpg"
+                                                    width="107"
+                                                    height="156"
+                                                    loading="lazy"
+                                                >
+                                            {%- else -%}
+                                                {{
+                                                    'collection-2'
+                                                    | placeholder_svg_tag: 'placeholder-svg placeholder collage-card__image'
+                                                }}
+                                            {%- endif -%}
+                                        </div>
+                                    </button>
+                                </modal-opener>
+
+                                <modal-dialog id="PopupModal-{{ block.id }}" class="collage-video__modal">
+                                    <div
+                                        class="collage-video__modal-content"
+                                        role="dialog"
+                                        aria-label="{{ block.settings.description | escape }}"
+                                        aria-modal="true"
+                                        tabindex="-1"
+                                    >
+                                        <button
+                                            id="ModalClose-{{ block.id }}"
+                                            type="button"
+                                            class="collage-video__modal-toggle modal__close-button"
+                                            aria-label="{{ 'accessibility.close' | t }}"
+                                        >
+                                            <svg
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                role="presentation"
+                                                class="icon icon-close"
+                                            >
+                                                <use href="#icon-close" />
+                                            </svg>
+                                        </button>
+                                        <deferred-media class="collage-video__modal-video template-popup">
+                                            <template>
+                                                {%- if block.settings.video_url.type == 'youtube' -%}
+                                                    <iframe
+                                                        src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&loop=1&playlist={{ block.settings.video_url.id }}&enablejsapi=1"
+                                                        class="js-youtube"
+                                                        allow="autoplay; encrypted-media"
+                                                        allowfullscreen
+                                                        title="{{ block.settings.description | escape }}"
+                                                    ></iframe>
+                                                {%- else -%}
+                                                    <iframe
+                                                        src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&loop=1"
+                                                        class="js-vimeo"
+                                                        allow="autoplay; encrypted-media"
+                                                        allowfullscreen
+                                                        title="{{ block.settings.description | escape }}"
+                                                    ></iframe>
+                                                {%- endif -%}
+                                            </template>
+                                        </deferred-media>
+                                    </div>
+                                </modal-dialog>
+                            {%- endif -%}
+                        {%- endif -%}
+                        {%- if coverText != blank -%}
+                            <div class="collage-cart__with-text _{{ block.settings.content_position }}{% if settings.animation_on_reveal %} reveal-slide-in{% endif -%}">
+                                <span class="text reveal-item">
+                                    {%- render 'helper__decorate-heading', heading: coverText -%}
+                                </span>
+                            </div>
+                        {%- endif -%}
+                    </div>
+            {%- endcase -%}
+        {%- endfor -%}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.collage.name",
+  "tag": "section",
+  "class": "spaced-section collage-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:sections.collage.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:sections.collage.settings.heading_size.options.h1"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.collage.settings.heading_size.options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:sections.collage.settings.heading_size.options.h3"
+        }
+      ],
+      "default": "h2",
+      "label": "t:sections.collage.settings.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.collage.settings.desktop_layout.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.collage.settings.desktop_layout.options__2.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.collage.settings.desktop_layout.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "options": [
+        {
+          "value": "collage",
+          "label": "t:sections.collage.settings.mobile_layout.options__1.label"
+        },
+        {
+          "value": "column",
+          "label": "t:sections.collage.settings.mobile_layout.options__2.label"
+        }
+      ],
+      "default": "collage",
+      "label": "t:sections.collage.settings.mobile_layout.label"
+    }
+  ],
+  "blocks": [
+    {
+  "type": "image",
+  "name": "t:sections.collage.blocks.image.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.collage.blocks.image.settings.image.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.collage.blocks.image.settings.color_scheme.info"
+    }
+  ]
+},
+    {
+  "type": "product",
+  "name": "t:sections.collage.blocks.product.name",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:sections.collage.blocks.product.settings.product.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    }
+  ]
+},
+    {
+  "type": "collection",
+  "name": "t:sections.collage.blocks.collection.name",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.collage.blocks.collection.settings.collection.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    }
+  ]
+},
+    {
+  "type": "video",
+  "name": "t:sections.collage.blocks.video.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "t:sections.collage.blocks.video.settings.cover_image.label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "cover_text",
+      "label": "t:sections.collage.blocks.video.settings.cover_text.label",
+      "default": "Hightlight important details"
+    },
+    {
+      "type": "text",
+      "id": "internal_video_link",
+      "label": "t:sections.collage.blocks.video.settings.internal_video_link.label"
+    },
+    {
+      "type": "range",
+      "id": "video_width",
+      "label": "t:sections.collage.blocks.video.settings.video_width.label",
+      "min": 50,
+      "max": 100,
+      "step": 10,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_internal_video",
+      "default": true,
+      "label": "t:sections.collage.blocks.video.settings.autoplay_internal_video.label",
+      "info": "t:sections.collage.blocks.video.settings.autoplay_internal_video.info"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+      "label": "t:sections.collage.blocks.video.settings.video_url.label",
+      "placeholder": "t:sections.collage.blocks.video.settings.video_url.placeholder",
+      "info": "t:sections.collage.blocks.video.settings.video_url.info"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "description",
+      "default": "Describe the video for customers using screen readers",
+      "label": "Video alt text"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collage.blocks.video.settings.header_1.content"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:sections.collage.blocks.video.settings.content_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.collage.blocks.video.settings.content_position.options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.collage.blocks.video.settings.content_position.options.right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "default": 4.5,
+      "unit": "rem",
+      "label": "t:sections.collage.blocks.video.settings.text_font_size.label",
+      "info":"t:sections.collage.blocks.video.settings.text_font_size.info"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.collage.blocks.video.settings.text_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "content_background",
+      "default": "#c0c0c0",
+      "label": "t:sections.collage.blocks.video.settings.content_background.label"
+    },
+    {
+      "type": "range",
+      "id": "content_background_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "label": "t:sections.collage.blocks.video.settings.content_background_opacity.label"
+    },
+    {
+      "type": "range",
+      "id": "inner_paddings",
+      "min": 1,
+      "max": 8,
+      "step": 0.5,
+      "default": 6,
+      "unit": "rem",
+      "label": "t:sections.collage.blocks.video.settings.inner_paddings.label",
+      "info":"t:sections.collage.blocks.video.settings.inner_paddings.info"
+    }
+  ]
+}
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "t:sections.collage.presets.name",
+      "blocks": [
+        {
+          "type": "video"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

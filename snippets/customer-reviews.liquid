@@ -1,0 +1,109 @@
+{% comment %}
+    Render block of the Judgeme reviews
+
+    Accepts:
+    - product: {Object}
+{% endcomment %}
+
+{% style %}
+    #judgeme-product-reviews {
+        margin: .5rem 0;
+        overflow: visible;
+    }
+
+    .tab-title .judgeme-product-reviews-badge .jdgm-preview-badge {
+        font-size: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    @media only screen and (max-width: 475px) {
+        .tab-judgeme-reviews .jdgm-row-stars {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .tab-judgeme-reviews .jdgm-rev-widg {
+            padding: 0 !important;
+        }
+    }
+
+    @media only screen and (min-width: 767px) {
+        .tab-judgeme-reviews {
+            position: relative;
+        }
+
+        .tab-judgeme-reviews .jdgm-widget .jdgm-widget-actions-wrapper {
+            position: absolute !important;
+            left: calc(2.5rem - 50%);
+            top: calc(30% - 0.5rem);
+        }
+
+        .tab-judgeme-reviews .jdgm-review-widget--medium .jdgm-write-rev-link {
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .tab-judgeme-reviews .jdgm-row-stars {
+            display: unset;
+        }
+
+        .tab-judgeme-reviews .jdgm-rev-widg {
+            padding: initial;
+        }
+
+        /* with no rating */
+        .tab-judgeme-reviews .jdgm-widget [data-number-of-reviews="0"] {
+            min-height: 9rem;
+        }
+
+        .tab-judgeme-reviews .jdgm-widget [data-number-of-reviews="0"] .jdgm-widget-actions-wrapper {
+            top: calc(100% - 4.5rem);
+        }
+    }
+
+    @media only screen and (min-width: 990px) {
+        .tab-judgeme-reviews .jdgm-widget .jdgm-widget-actions-wrapper {
+            left: calc(3.5rem - 50%);
+            top: calc(30% + 3rem);
+        }
+    }
+
+    @media only screen and (min-width: 1100px) {
+        .tab-judgeme-reviews .jdgm-widget .jdgm-widget-actions-wrapper {
+            left: calc(3.5rem - 50%);
+        }
+
+        .tab-judgeme-reviews .jdgm-review-widget--medium .jdgm-write-rev-link {
+            margin: 0 0.25rem;
+        }
+        /* with no rating */
+        .tab-judgeme-reviews .jdgm-widget [data-number-of-reviews="0"] .jdgm-widget-actions-wrapper {
+            top: calc(100% - 7.5rem);
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .tab-judgeme-reviews .jdgm-widget .jdgm-widget-actions-wrapper {
+            left: calc(3.5rem - 50%);
+            top: calc(30% + .5rem);
+        }
+
+        .tab-judgeme-reviews .jdgm-review-widget--medium .jdgm-write-rev-link {
+            margin: 0 0.25rem;
+        }
+    }
+
+    @media only screen and (min-width: 1440px) {
+        .tab-judgeme-reviews .jdgm-widget .jdgm-widget-actions-wrapper {
+            left: calc(3.75rem - 50%);
+        }
+    }
+{% endstyle %}
+<div
+    id="judgeme-product-reviews"
+    class="jdgm-widget jdgm-review-widget"
+    data-product-title="{{ product.title }}"
+    data-id="{{ product.id }}"
+>
+    {{ product.metafields.judgeme.widget }}
+</div>

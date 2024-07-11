@@ -1,0 +1,222 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "text_before": "{{ product.vendor }}",
+            "text_after": "",
+            "show_rating": true,
+            "show_sku": true,
+            "show_price": true,
+            "show_badges": true
+          }
+        },
+        "gallery": {
+          "type": "gallery",
+          "settings": {
+            "show_badges": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "is_collapsed": true,
+            "initial_lines": 3
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_badges": true
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "mark_unavailable_variants": true
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "gift_card_show_recipient_form": false,
+            "dynamic_checkout_color_scheme": "inverse"
+          }
+        },
+        "pickup": {
+          "type": "pickup",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "gallery",
+        "description",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "pickup"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "enable_quick_add": false
+      }
+    },
+    "product-bought-together": {
+      "type": "product-bought-together",
+      "settings": {
+        "heading": "Wird oft zusammen gekauft",
+        "source": [
+
+        ],
+        "is_random": true,
+        "products_per_page": 4,
+        "badge_size": "sm",
+        "image_ratio": "settings|product_card_image_ratio"
+      }
+    },
+    "product-tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "description": {
+          "type": "description",
+          "settings": {
+            "heading": "Produktbeschreibung"
+          }
+        },
+        "details": {
+          "type": "details",
+          "settings": {
+            "heading": "Details",
+            "details_position": "details_in_list"
+          }
+        },
+        "reviews": {
+          "type": "custom_liquid",
+          "settings": {
+            "heading": "Kundenbewertungen",
+            "custom_liquid": "<style type=\"text\/css\" data-critical=\"true\">\n#shopify-section-{{ section.id }} .spr-container {\npadding: 0; border: none;\n}\n#shopify-section-{{ section.id }} .spr-header-title {\ndisplay: none;\n}\n<\/style>\n<div id=\"shopify-product-reviews\" data-id=\"{{ product.id }}\" style=\"margin: .5rem 0; overflow: visible\">{{ product.metafields.spr.reviews }}<\/div>"
+          }
+        },
+        "similar": {
+          "type": "similar",
+          "settings": {
+            "heading": "Ähnliche Produkte",
+            "source": [
+
+            ],
+            "is_random": true,
+            "products_per_page": 4,
+            "badge_size": "sm",
+            "image_ratio": "settings|product_card_image_ratio",
+            "show_to_cart_button": false
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "details",
+        "reviews",
+        "similar"
+      ],
+      "settings": {
+        "tabs_layout": "expanded"
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Kunden kauften auch",
+        "products_per_page": 5,
+        "use_search_and_discovery_app": true,
+        "product_list": [
+
+        ],
+        "badge_size": "sm",
+        "image_ratio": "settings|product_card_image_ratio",
+        "show_to_cart_button": true
+      }
+    },
+    "product-complementary": {
+      "type": "product-complementary",
+      "settings": {
+        "heading": "Complementary products",
+        "products_per_page": 5,
+        "use_search_and_discovery_app": true,
+        "product_list": [
+
+        ],
+        "badge_size": "sm",
+        "image_ratio": "settings|product_card_image_ratio",
+        "show_to_cart_button": true
+      }
+    },
+    "icons_bar": {
+      "type": "icons-bar",
+      "blocks": {
+        "icon-bar-1": {
+          "type": "icon",
+          "settings": {
+            "icon": "truck",
+            "text": "<p><b>ITEM BAR TITLE<\/b><\/p><p>Share shipping, delivery, policy information.<\/p>"
+          }
+        },
+        "icon-bar-2": {
+          "type": "icon",
+          "settings": {
+            "icon": "clock",
+            "text": "<p><b>ITEM BAR TITLE<\/b><\/p><p>Share shipping, delivery, policy information.<\/p>"
+          }
+        },
+        "icon-bar-3": {
+          "type": "icon",
+          "settings": {
+            "icon": "calendar",
+            "text": "<p><b>ITEM BAR TITLE<\/b><\/p><p>Share shipping, delivery, policy information.<\/p>"
+          }
+        },
+        "icon-bar-4": {
+          "type": "icon",
+          "settings": {
+            "icon": "clipboard-check",
+            "text": "<p><b>ITEM BAR TITLE<\/b><\/p><p>Share shipping, delivery, policy information.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "icon-bar-1",
+        "icon-bar-2",
+        "icon-bar-3",
+        "icon-bar-4"
+      ],
+      "settings": {
+        "color_scheme": "background-2",
+        "visibility": "all",
+        "swipe_on_mobile": true,
+        "border": false,
+        "shadow": false,
+        "separator": false
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product-bought-together",
+    "product-tabs",
+    "product-recommendations",
+    "product-complementary",
+    "icons_bar"
+  ]
+}
