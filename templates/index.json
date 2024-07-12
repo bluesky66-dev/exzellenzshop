@@ -7,17 +7,19 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/smart-watch-checking-pulse-using-smartphone_822f890a-c957-4f0f-89a7-9bb0a725e87b.jpg",
+            "image": "shopify:\/\/shop_images\/home_slider_1.jpg",
             "link": "#\/",
+            "video_url": "",
             "content_title": "Neue Ausrüstung zu besten Preisen",
+            "content_title_size": "theme_appearance",
             "description": "Schauen Sie sich unser Sonderangebot für tragbare Gadgets an",
             "button_title": "Jetzt einkaufen",
             "button_link": "shopify:\/\/collections\/smart-fitness-watches",
             "slideshow_content_position": "left",
             "slideshow_content_background": "#d4d8da",
             "slideshow_content_background_opacity": 0,
-            "slideshow_content_foreground": "#E20048",
-            "slideshow_content_button_background": "#E20048",
+            "slideshow_content_foreground": "#e20048",
+            "slideshow_content_button_background": "#e20048",
             "slideshow_content_button_foreground": "#ffffff"
           }
         },
@@ -25,9 +27,11 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/slider-headphones.jpg",
+            "image": "shopify:\/\/shop_images\/home_slider_2.jpg",
             "link": "#\/",
+            "video_url": "",
             "content_title": "Neue Ausrüstung zu besten Preisen",
+            "content_title_size": "theme_appearance",
             "description": "Schauen Sie sich unser Sonderangebot für Kopfhörer an",
             "button_title": "Jetzt einkaufen",
             "button_link": "shopify:\/\/collections\/headphones",
@@ -43,9 +47,11 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/brown-leather-phone-case-with-design-space.jpg",
+            "image": "shopify:\/\/shop_images\/hoem_slider_3.jpg",
             "link": "#\/",
+            "video_url": "",
             "content_title": "Neue Ausrüstung zu besten Preisen",
+            "content_title_size": "theme_appearance",
             "description": "Schauen Sie sich unser Sonderangebot für Handyzubehör an",
             "button_title": "Jetzt einkaufen",
             "button_link": "shopify:\/\/collections\/mobile-phone-accessories",
@@ -56,44 +62,31 @@
             "slideshow_content_button_background": "#1e8060",
             "slideshow_content_button_foreground": "#ffffff"
           }
-        },
-        "black": {
-          "type": "image",
-          "settings": {
-            "title": "Image",
-            "image": "shopify:\/\/shop_images\/managing-smart-speakers-concept.jpg",
-            "link": "#\/",
-            "content_title": "Neue Ausrüstung zu besten Preisen",
-            "description": "Schauen Sie sich unser Sonderangebot für Lautsprecher an",
-            "button_title": "Jetzt einkaufen",
-            "button_link": "shopify:\/\/collections\/audio-accessories",
-            "slideshow_content_position": "left",
-            "slideshow_content_background": "#d4d8da",
-            "slideshow_content_background_opacity": 0,
-            "slideshow_content_foreground": "#E20048",
-            "slideshow_content_button_background": "#000000",
-            "slideshow_content_button_foreground": "#ffffff"
-          }
         }
       },
       "block_order": [
         "red",
         "blue",
-        "green",
-        "black"
+        "green"
       ],
       "settings": {
         "color_bg": "#d4d8da",
         "max_width": "",
         "loop": true,
         "autoplay": false,
+        "transition_effect": "scroll",
         "delay": "10",
         "slides_per_view": "1",
         "slide_height": "adapt_image",
+        "scope_visibility": "all_screens",
         "navigation": true,
+        "navigation_position": "sides",
         "pagination": true,
         "slider_content_animation": true,
-        "slider_preload_first": true
+        "slider_preload_first": true,
+        "show_top_border": false,
+        "show_bottom_border": false,
+        "slider_btns_color": "#ffffff"
       }
     },
     "icons_bar": {
@@ -103,28 +96,32 @@
           "type": "icon",
           "settings": {
             "icon": "truck",
-            "text": "<p><strong>KOSTENLOSER VERSAND<\/strong><\/p><p>Kostenlos für Bestellungen über $100<\/p>"
+            "text": "<p><strong>KOSTENLOSER VERSAND<\/strong><\/p><p>Kostenlos für Bestellungen über $100<\/p>",
+            "text_position": "right"
           }
         },
         "icon-bar-2": {
           "type": "icon",
           "settings": {
             "icon": "clock",
-            "text": "<p><strong>24\/7 Unterstützung<\/strong><\/p><p>Schnelle, professionelle Unterstützung<\/p>"
+            "text": "<p><strong>24\/7 Unterstützung<\/strong><\/p><p>Schnelle, professionelle Unterstützung<\/p>",
+            "text_position": "right"
           }
         },
         "icon-bar-3": {
           "type": "icon",
           "settings": {
             "icon": "calendar",
-            "text": "<p><strong>LIEFERDATUM WÄHLEN<\/strong><\/p><p>Flexible Liefertermine<\/p>"
+            "text": "<p><strong>LIEFERDATUM WÄHLEN<\/strong><\/p><p>Flexible Liefertermine<\/p>",
+            "text_position": "right"
           }
         },
         "icon-bar-4": {
           "type": "icon",
           "settings": {
             "icon": "clipboard-check",
-            "text": "<p><strong>VERLÄNGERTER SUPPORT-ZEITRAUM<\/strong><\/p><p>30 Tage Rückgaberecht<\/p>"
+            "text": "<p><strong>VERLÄNGERTER SUPPORT-ZEITRAUM<\/strong><\/p><p>30 Tage Rückgaberecht<\/p>",
+            "text_position": "right"
           }
         }
       },
@@ -140,7 +137,11 @@
         "swipe_on_mobile": true,
         "border": false,
         "shadow": false,
-        "separator": false
+        "separator": false,
+        "animation_on_reveal": false,
+        "control_vertical_margins": 0.5,
+        "alignment_items_inside_flexbox": "center",
+        "slideshow_ui_type": "buttons"
       }
     },
     "home-banners-1": {
@@ -153,16 +154,20 @@
             "sub_title": "Bis zu 20% Rabatt",
             "text": "<p>2023 Ankünfte<\/p>",
             "link": "",
+            "link_appearance": "image_link",
+            "button_label": "Shop now",
             "image_enabled": true,
-            "image": "shopify:\/\/shop_images\/smart-speakers.jpg",
+            "image_position": "contain",
             "image_spaced": false,
+            "show_outline": false,
             "add_cover": true,
-            "cover_background": "#E20048",
+            "cover_background": "#e20048",
             "cover_background_gradient": "",
             "color_title": "#ffffff",
             "color_text": "#ffffff",
             "bg_color_subtitle": "#2e2e2e",
-            "subtitle_background_gradient": ""
+            "subtitle_background_gradient": "",
+            "use_bold_heading": false
           }
         },
         "col-2": {
@@ -172,16 +177,20 @@
             "sub_title": "Bis zu 20 % Rabatt",
             "text": "<p>Lassen Sie sich das nicht entgehen<\/p>",
             "link": "",
+            "link_appearance": "image_link",
+            "button_label": "Shop now",
             "image_enabled": true,
-            "image": "shopify:\/\/shop_images\/images.jpg",
+            "image_position": "contain",
             "image_spaced": false,
+            "show_outline": false,
             "add_cover": true,
             "cover_background": "#101824",
             "cover_background_gradient": "",
             "color_title": "#ffffff",
             "color_text": "#ffffff",
             "bg_color_subtitle": "#106ff0",
-            "subtitle_background_gradient": ""
+            "subtitle_background_gradient": "",
+            "use_bold_heading": false
           }
         }
       },
@@ -191,12 +200,14 @@
       ],
       "settings": {
         "title": "",
+        "title_size": "h2",
         "image_width": "w-1\/2",
         "image_ratio": "adapt",
         "column_alignment": "left",
         "column_direction": "row-reverse",
         "button_label": "",
         "button_link": "",
+        "view_all_appearance": "button",
         "swipe_on_mobile": false,
         "content_animation": true
       }
@@ -205,10 +216,15 @@
       "type": "featured-collection",
       "settings": {
         "title": "Smartwatches & Fitnessuhren",
+        "heading_size": "h2",
+        "subtitle": "",
         "collection": "smart-fitness-watches",
         "products_to_show": 8,
         "products_per_row": 4,
         "swipe_on_mobile": true,
+        "show_mobile_scrollbar": true,
+        "show_box_shadow": true,
+        "slideshow_ui_type": "buttons",
         "show_view_all": true,
         "view_all_appearance": "button",
         "view_all_position": "title",
@@ -216,23 +232,28 @@
         "image_ratio": "settings|product_card_image_ratio",
         "show_to_cart_button": true,
         "add_cover": true,
+        "image_position": "contain",
         "cover_text_color": "#ffffff",
         "cover_background": "#1c73f5",
         "cover_background_gradient": "",
         "cover_button_text_color": "#333333",
         "cover_button_background": "#ffffff",
-        "cover_button_background_gradient": "",
-        "cover_image": "shopify:\/\/shop_images\/smartwatch.jpg"
+        "cover_button_background_gradient": ""
       }
     },
     "highlight-magazine-smartphones": {
       "type": "featured-collection",
       "settings": {
         "title": "Handy-Zubehör",
+        "heading_size": "h2",
+        "subtitle": "",
         "collection": "mobile-phone-accessories",
         "products_to_show": 8,
         "products_per_row": 4,
         "swipe_on_mobile": true,
+        "show_mobile_scrollbar": true,
+        "show_box_shadow": true,
+        "slideshow_ui_type": "buttons",
         "show_view_all": true,
         "view_all_appearance": "button",
         "view_all_position": "title",
@@ -240,23 +261,28 @@
         "image_ratio": "settings|product_card_image_ratio",
         "show_to_cart_button": true,
         "add_cover": true,
+        "image_position": "contain",
         "cover_text_color": "#ffffff",
-        "cover_background": "#E20048",
+        "cover_background": "#e20048",
         "cover_background_gradient": "",
         "cover_button_text_color": "#333333",
         "cover_button_background": "#ffffff",
-        "cover_button_background_gradient": "",
-        "cover_image": "shopify:\/\/shop_images\/colorful-phone-cases.jpg"
+        "cover_button_background_gradient": ""
       }
     },
     "highlight-magazine-activity": {
       "type": "featured-collection",
       "settings": {
         "title": "Kopfhörer",
+        "heading_size": "h2",
+        "subtitle": "",
         "collection": "headphones",
         "products_to_show": 8,
         "products_per_row": 4,
         "swipe_on_mobile": true,
+        "show_mobile_scrollbar": true,
+        "show_box_shadow": true,
+        "slideshow_ui_type": "buttons",
         "show_view_all": true,
         "view_all_appearance": "button",
         "view_all_position": "title",
@@ -264,23 +290,28 @@
         "image_ratio": "settings|product_card_image_ratio",
         "show_to_cart_button": true,
         "add_cover": true,
+        "image_position": "contain",
         "cover_text_color": "#ffffff",
         "cover_background": "#1e8060",
         "cover_background_gradient": "",
         "cover_button_text_color": "#333333",
         "cover_button_background": "#ffffff",
-        "cover_button_background_gradient": "",
-        "cover_image": "shopify:\/\/shop_images\/sale-products-with-discount.jpg"
+        "cover_button_background_gradient": ""
       }
     },
     "favourite_products": {
       "type": "featured-collection",
       "settings": {
         "title": "Unsere Lieblingsprodukte",
+        "heading_size": "h2",
+        "subtitle": "",
         "collection": "all",
         "products_to_show": 5,
         "products_per_row": 5,
         "swipe_on_mobile": true,
+        "show_mobile_scrollbar": true,
+        "show_box_shadow": true,
+        "slideshow_ui_type": "buttons",
         "show_view_all": true,
         "view_all_appearance": "link",
         "view_all_position": "title",
@@ -288,6 +319,7 @@
         "image_ratio": "settings|product_card_image_ratio",
         "show_to_cart_button": true,
         "add_cover": false,
+        "image_position": "contain",
         "cover_text_color": "#ffffff",
         "cover_background": "#1c73f5",
         "cover_background_gradient": "",
@@ -301,12 +333,23 @@
       "disabled": true,
       "settings": {
         "heading": "Browse our collections",
+        "heading_size": "h2",
         "collection_list": [
 
         ],
         "sort": "alphabetical",
         "collection_url": "shopify:\/\/collections",
-        "cols": 10
+        "view_all_appearance": "link",
+        "cols": 10,
+        "collections_per_row": 5,
+        "image_position": "contain",
+        "show_mobile_scrollbar": true,
+        "slideshow_ui_type": "buttons",
+        "show_item_border": false,
+        "swipe_on_desktop": false,
+        "cover_background": "#F4F4F5",
+        "cover_text_color": "#000000",
+        "title_cover_background": "#ffffff"
       }
     },
     "modern_gadgets": {
@@ -315,7 +358,8 @@
         "title": {
           "type": "heading",
           "settings": {
-            "heading": "Erhabene Gadgets"
+            "heading": "Erhabene Gadgets",
+            "heading_font_size": 48
           }
         },
         "content": {
@@ -340,9 +384,11 @@
       "settings": {
         "full_width": false,
         "two_column_layout": true,
-        "image": "shopify:\/\/shop_images\/modern-gadgets.jpg",
         "layout": "image_first",
-        "text_align": "left"
+        "text_align": "left",
+        "cover_text_color": "#ffffff",
+        "cover_background": "#101824",
+        "cover_background_gradient": ""
       }
     },
     "featured_recent_posts": {
@@ -351,7 +397,10 @@
         "post_title": {
           "type": "title",
           "settings": {
+            "title_size": 24,
             "show_date": true,
+            "date_format": "month_year",
+            "show_icon_calendar": true,
             "show_author": false
           }
         },
@@ -368,10 +417,14 @@
       ],
       "settings": {
         "heading": "Empfohlene aktuelle Beiträge",
+        "heading_size": "h2",
         "blog": "news",
         "show_image": true,
         "post_limit": 3,
-        "show_view_all": false
+        "show_view_all": false,
+        "view_all_appearance": "link",
+        "show_mobile_scrollbar": true,
+        "slideshow_ui_type": "buttons"
       }
     },
     "about_store": {
@@ -381,7 +434,8 @@
           "type": "heading",
           "settings": {
             "heading": "Über uns",
-            "heading_size": "medium"
+            "heading_size": "medium",
+            "use_heading_style": true
           }
         },
         "content": {
@@ -397,7 +451,9 @@
       ],
       "settings": {
         "color_scheme": "background-1",
-        "full_width": false
+        "full_width": false,
+        "content_width": 45,
+        "content_position": "center"
       }
     },
     "home-brands-slider": {
@@ -407,9 +463,10 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/home-apple-logo.png",
             "link": "#\/",
+            "video_url": "",
             "content_title": "",
+            "content_title_size": "theme_appearance",
             "description": "",
             "button_title": "",
             "button_link": "",
@@ -425,9 +482,10 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/home-samsung-logo.png",
             "link": "#\/",
+            "video_url": "",
             "content_title": "",
+            "content_title_size": "theme_appearance",
             "description": "",
             "button_title": "",
             "button_link": "",
@@ -443,9 +501,10 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/home-sony-logo.png",
             "link": "#\/",
+            "video_url": "",
             "content_title": "",
+            "content_title_size": "theme_appearance",
             "description": "",
             "button_title": "",
             "button_link": "",
@@ -461,9 +520,10 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/home-bose-logo.png",
             "link": "#\/",
+            "video_url": "",
             "content_title": "",
+            "content_title_size": "theme_appearance",
             "description": "",
             "button_title": "",
             "button_link": "",
@@ -479,9 +539,10 @@
           "type": "image",
           "settings": {
             "title": "Image",
-            "image": "shopify:\/\/shop_images\/home-belkin-logo.png",
             "link": "#\/",
+            "video_url": "",
             "content_title": "",
+            "content_title_size": "theme_appearance",
             "description": "",
             "button_title": "",
             "button_link": "",
@@ -506,13 +567,19 @@
         "max_width": "",
         "loop": true,
         "autoplay": true,
+        "transition_effect": "scroll",
         "delay": "10",
         "slides_per_view": "7",
         "slide_height": "auto",
+        "scope_visibility": "all_screens",
         "navigation": true,
+        "navigation_position": "sides",
         "pagination": false,
         "slider_content_animation": true,
-        "slider_preload_first": false
+        "slider_preload_first": false,
+        "show_top_border": false,
+        "show_bottom_border": false,
+        "slider_btns_color": "#ffffff"
       }
     }
   },
